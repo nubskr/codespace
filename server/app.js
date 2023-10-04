@@ -14,9 +14,12 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('hmmm');
-    socket.on('test', (shit) => {
+    
+    socket.on('update', (shit) => {
         console.log(shit);
+	socket.broadcast.emit('updatee',shit);
     })
+
     socket.on('disconnect', () => {
         // gets triggered whever the connection closes due to any reason
         console.log(':(');
