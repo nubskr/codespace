@@ -2,6 +2,7 @@ const express = require('express');
 const { createServer } = require('node:http');
 const { Server } = require("socket.io");
 const cors = require('cors');
+const test = require('./routes/test.js');
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,8 @@ const io = new Server(server); // this shit creates a separate websocket server 
 app.get('/', (req, res) => {
     res.send('omg hewwo fren!!');
 });
+
+app.use('/test',test);
 
 io.on('connection', (socket) => {
     console.log('hmmm');
