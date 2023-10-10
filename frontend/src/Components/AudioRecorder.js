@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-const configuration = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }, {urls: "stun:stun1.l.google.com:19302"}] };
+const configuration = { iceServers: [{ urls: "stun:stun.labs.net:3478" }] };
 const peerConnection = new RTCPeerConnection(configuration);
 const socket = io("http://localhost:6969/", { transports: ['websocket'] });
 
@@ -12,7 +12,7 @@ export default function AudioRecorder() {
       await peerConnection.setLocalDescription(offer);
       console.log(offer);
       socket.emit('send-offer',offer);
-    }
+    } 
     catch(error){
       console.error(error);
     }
@@ -35,7 +35,6 @@ export default function AudioRecorder() {
       catch(error){
         console.error(error);
       }
-      // accept the offer and send my own as well UwU
     })
 
     socket.on('receive-ans', (offer) => {
@@ -72,7 +71,6 @@ export default function AudioRecorder() {
   },[socket]);
 
   async function startStream() {
-    setupwebRTC();
     try {
       const localStream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
@@ -81,7 +79,7 @@ export default function AudioRecorder() {
       });
       // since we are only doing audio, there will be only one track, if we did video as well, then there would be two tracks
       localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
+      setupwebRTC();
       // Assign the stream to the video element sourceObject
       audioRef.current.srcObject = localStream;
     } catch (error) {
@@ -93,7 +91,7 @@ export default function AudioRecorder() {
     const localStream = audioRef.current.srcObject;
     // this stops the microphone from taking in any audio
     if (localStream) {
-      const audioTrack = localStream.getAudioTracks()[0]; // Get the first audio track
+      const audioTrack = localStream.getAudioTracks()[0]; // Get the audio track
       if (audioTrack) {
         audioTrack.stop(); // Stop the audio track
       }
