@@ -16,15 +16,26 @@ app.get('/', (req, res) => {
 app.use('/test',test);
 
 io.on('connection', (socket) => {
-    console.log('hmmm');
+    console.log('omg hi bb');
     
     socket.on('update', (shit) => {
         console.log(shit);
 	socket.broadcast.emit('updatee',shit);
     })
 
-    socket.on('send-audio', (shit) => {
-        socket.broadcast.emit('receive-audio',shit);
+    socket.on('send-offer', (shit_offer) => {
+        console.log('shit received');
+        socket.broadcast.emit('receive-offer',shit_offer);
+    })
+
+    socket.on('send-answer', (shit_offer) => {
+        console.log('shit ans send');
+        socket.broadcast.emit('receive-ans',shit_offer);
+    })
+
+    socket.on('send-ice-cand', (shit) => {
+        console.log("icceeeeeeee");
+        socket.broadcast.emit('receive-ice-cand',shit);
     })
 
     socket.on('disconnect', () => {

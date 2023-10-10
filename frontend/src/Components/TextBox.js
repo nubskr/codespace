@@ -3,29 +3,22 @@ import React, { useEffect, useState } from 'react';
 import { useRef } from 'react';
 
 // Declare socket outside the component
-// const socket = io("http://localhost:6969/", { transports: ['websocket'] });
+const socket = io("http://localhost:6969/", { transports: ['websocket'] });
 
 export default function TextBox() {
     const [textvalue, setTextvalue] = useState('rand value');
-    const [audioTrack, setAudioTrack] = useState(null);
-  const audioRef = useRef(null);   
-    // useEffect(() => {
-    //     console.log('hittt');
-    //     // Listen for any incoming messages and update textvalue
-    //     socket.on('updatee', (val) => {
-    //         console.log(val);
-    //         setTextvalue(val);
-    //     });
-    // },[socket]);
+    useEffect(() => {
+        // Listen for any incoming messages and update textvalue
+        socket.on('updatee', (val) => {
+            setTextvalue(val);
+        });
+    },[socket]);
 
     function Handlechange(e) {
         setTextvalue(e.target.value);
         const newval = e.target.value;
-        // socket.emit('update', newval);
+        socket.emit('update', newval);
     }
-    // make shit so that we can:
-    // 1. send audio
-    // 2. recive audio
     return (
         <>
         <textarea
