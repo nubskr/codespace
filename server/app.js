@@ -23,12 +23,17 @@ io.on('connection', (socket) => {
 	socket.broadcast.emit('updatee',shit);
     })
 
+    socket.on('send-audio', (shit) => {
+        socket.broadcast.emit('receive-audio',shit);
+    })
+
     socket.on('disconnect', () => {
         // gets triggered whever the connection closes due to any reason
         console.log(':(');
     })
 })  
-
+// TODO: make voice chat
+// just send audio which is recorded through the same socket connection
 server.listen(6969, () => {
     console.log(`server listening`);
 })
