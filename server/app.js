@@ -45,6 +45,6 @@ io.on('connection', (socket) => {
 })  
 // TODO: make voice chat
 // just send audio which is recorded through the same socket connection
-server.listen(6969, () => {
+server.listen(6909, () => {
     console.log(`server listening`);
 })
