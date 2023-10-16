@@ -3,11 +3,15 @@ const { createServer } = require('node:http');
 const { Server } = require("socket.io");
 const cors = require('cors');
 const test = require('./routes/test.js');
+var bodyParser = require('body-parser')
 
 const app = express();
 app.use(cors());
 const server = createServer(app);
 const io = new Server(server); // this shit creates a separate websocket server whenever a connection opens
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.get('/', (req, res) => {
     res.send('omg hewwo fren!!');
