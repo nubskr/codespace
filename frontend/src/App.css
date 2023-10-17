@@ -1,0 +1,44 @@
+.main {
+  font-size: 17px;
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: auto 1fr;
+  gap: 10px; /* Adjust as needed to create a gap between components */
+}
+
+textarea {
+  font-size: 16px; /* Set the font size to 16 pixels (adjust as needed) */
+  /* Add other styles as needed */
+}
+
+.LHS-container {
+  max-height: 100vh;
+  overflow: auto;
+  padding: 10px; /* Adjust as needed for spacing */
+}
+
+.RHS-container {
+  position: sticky;
+  right: 0;
+  max-height: 100vh;
+  top: 0;
+  overflow: auto;
+  padding: 10px; /* Adjust as needed for spacing */
+}
+
+.RHS {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-output {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1; /* The input/output area takes up the remaining space */
+}
+
+button {
+  margin-top: 10px; /* Adjust margin as needed */
+  max-width: 90px;
+}

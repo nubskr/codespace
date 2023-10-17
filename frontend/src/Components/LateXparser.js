@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
-import './YourCustomStyles.css';
 
 function App() {
   const [latexCont,setlatexCont] = useState('');

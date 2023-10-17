@@ -4,8 +4,15 @@ const path = require('path');
 const fs = require('fs');
 const router = express.Router();
 const docker = new Docker();
-
-const containerOptions = {
+  
+router.post('/', (req,res) => {
+  const cppfilepath = path.join(__dirname,'test1','a.cpp');
+  const inputfilepath = path.join(__dirname,'test1','input.txt');
+  const outputfilepath = path.join(__dirname,'test1','output.txt');
+  const {code,input} = req.body;
+console.log(code);
+console.log(input);
+  const containerOptions = {
     Image: 'compiler:UwU', // Replace with the image you want to run
     Cmd: ['./doshit.sh'],
     Binds: [
@@ -13,28 +20,20 @@ const containerOptions = {
       '/home/nubskr/Stuff/server/routes/test1/:/contest/',
     ],
   };
-  
-router.get('/', (req,res) => {
-  const cppfilepath = path.join(__dirname,'test1','a.cpp');
-  const inputfilepath = path.join(__dirname,'test1','a.cpp');
-  const outputfilepath = path.join(__dirname,'test1','output.txt');
-  const {code,input} = req.body;
-
   function changeFile(path,data){
     fs.writeFile(path, data, 'utf8', (err) => {
       if (err) {
         console.error('Error writing the file:', err);
         return;
       }
-
       console.log('File content has been updated.');
     });
   }
 
   async function go(){
     // change the input and cpp file to the req
-    changeFile(cppfilepath,code);
-    changeFile(inputfilepath,input);
+    await changeFile(cppfilepath,code);
+    await changeFile(inputfilepath,input);
     await docker.createContainer(containerOptions, (err, container) => {
       if (err) {
         console.error('Error creating container:', err);
