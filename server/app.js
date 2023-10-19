@@ -24,7 +24,6 @@ io.on('connection', (socket) => {
         socket.username = username;
         socket.join(roomid);
         console.log(`${username} joined ${roomid}`);
-        socket.to(roomid).emit('receive-code-update',roomid);
     })
 
     socket.on('update-code', ({roomid,code}) => {
