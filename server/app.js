@@ -22,9 +22,9 @@ app.use('/test',test);
 io.on('connection', (socket) => {
     console.log('omg hi bb');
     
-    socket.on('update', (shit) => {
+    socket.on('update-code', (shit) => {
         console.log(shit);
-	socket.broadcast.emit('updatee',shit);
+	socket.broadcast.emit('receive-code-update',shit);
     })
 
     socket.on('send-offer', (shit_offer) => {
@@ -47,8 +47,7 @@ io.on('connection', (socket) => {
         console.log(':(');
     })
 })  
-// TODO: make voice chat
-// just send audio which is recorded through the same socket connection
+
 server.listen(6909, () => {
     console.log(`server listening`);
 })

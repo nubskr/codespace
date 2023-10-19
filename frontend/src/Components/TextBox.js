@@ -19,25 +19,23 @@ export default function TextBox() {
     const [outputvalue, setOutputvalue] = useState('');
     useEffect(() => {
         // Listen for any incoming messages and update textvalue
-        socket.on('updatee', (val) => {
+        socket.on('receive-code-update', (val) => {
             setTextvalue(val);
         });
     },[socket]);
 
-    // function Handlechange(e) {
-    //     setTextvalue(e.target.value);
-    //     const newval = e.target.value;
-    //     socket.emit('update', newval);
-    // }
     const Handlechange = React.useCallback((val, viewUpdate) => {
         console.log('val:', val);
         setTextvalue(val);
-      }, []);
+        socket.emit('update-code',val);
+    }, []);
+
     function Handlechangeinput(e) {
         setInputvalue(e.target.value);
         const newval = e.target.value;
         socket.emit('update-input', newval);
     }
+
     async function sendreq(){
         console.log(textvalue);
         console.log(inputvalue);
@@ -48,10 +46,11 @@ export default function TextBox() {
         const response = await axios.post(apiUrl, requestData);
         setOutputvalue(response.data);
     }
+
     function Handlecompile(e) {
         sendreq();
     }
-    console.log(outputvalue);
+    
     return (
     <div className="RHS">
         <div className="code-area">
