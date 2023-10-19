@@ -101,7 +101,7 @@ export default function AudioRecorder() {
         audio: {
           // echoCancellation: false, // turning it off increases the vocal quality but also increases background noise, :angycat:
         },
-        video: true
+        // video: true
       });
       // since we are only doing audio, there will be only one track, if we did video as well, then there would be two tracks
       localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));

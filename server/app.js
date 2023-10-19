@@ -20,31 +20,37 @@ app.get('/', (req, res) => {
 app.use('/test',test);
 
 io.on('connection', (socket) => {
-    console.log('omg hi bb');
-    
-    socket.on('update-code', (shit) => {
-        console.log(shit);
-	socket.broadcast.emit('receive-code-update',shit);
+    socket.on('join-room',({username,roomid}) => {
+        socket.username = username;
+        socket.join(roomid);
+        console.log(`${username} joined ${roomid}`);
+        socket.to(roomid).emit('receive-code-update',roomid);
     })
 
-    socket.on('send-offer', (shit_offer) => {
-        console.log('shit received');
-        socket.broadcast.emit('receive-offer',shit_offer);
+    socket.on('update-code', ({roomid,code}) => {
+        socket.broadcast.emit('receive-code-update',code);
+        socket.to(roomid).emit('receive-code-update',code);
     })
 
-    socket.on('send-answer', (shit_offer) => {
-        console.log('shit ans send');
-        socket.broadcast.emit('receive-ans',shit_offer);
+    socket.on('send-offer', ({roomid,offer}) => {
+        socket.to(roomid).emit('receive-offer',offer);
     })
 
-    socket.on('send-ice-cand', (shit) => {
-        console.log("icceeeeeeee");
-        socket.broadcast.emit('receive-ice-cand',shit);
+    socket.on('send-answer', ({roomid,ans}) => {
+        socket.to(roomid).emit('receive-ans',ans);
+    })
+
+    socket.on('send-ice-cand', ({roomid,cand}) => {
+        socket.to(roomid).emit('receive-ice-cand',cand);
+    })
+
+    socket.on('leave-room', ({roomid}) => {
+        socket.leave(roomid);
     })
 
     socket.on('disconnect', () => {
-        // gets triggered whever the connection closes due to any reason
-        console.log(':(');
+        // triggered whever a connection closes 
+        console.log('a connection closed');
     })
 })  
 

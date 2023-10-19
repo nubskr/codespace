@@ -1,24 +1,21 @@
 // import io from 'socket.io-client';
-import { useRef } from 'react';
-import AudioRecorder from './Components/AudioRecorder';
-import LateXparser from './Components/LateXparser';
-import TextBox from './Components/TextBox';
 import './App.css'
-// const socket = io("http://localhost:6969/",{transports: ['websocket']});
+import JoinRoom from './Components/JoinRoom';
+import { Route,Routes, BrowserRouter } from 'react-router-dom';
+import CreateNewRoom from './Components/CreateNewRoom';
+import Room from './Components/Room';
+// const socket = io("http://localhost:6909/",{transports: ['websocket']});
 
-function App() {
+function App(){
   return (
-    <div className='main'>
-      <AudioRecorder />
-      <div className="LHS-container">
-        <LateXparser />
-      </div>
-      <div className="RHS-container">
-        <TextBox className="RHS-container"/>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+          <Route path="/join" element={<JoinRoom />} />
+          <Route path="/create" element={<CreateNewRoom />} />
+          <Route path="/room/:roomid" element={<Room />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
 
 export default App;

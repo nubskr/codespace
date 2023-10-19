@@ -8,37 +8,41 @@ import { StreamLanguage } from '@codemirror/language';
 import { cpp } from '@codemirror/lang-cpp';
 
 // Replace with the URL you want to send the request to
-const apiUrl = 'http://localhost:6909/test';
+const apiUrl = 'http://localhost:6909/test'; // cpp compilation docker container 
 
 // Declare socket outside the component
 const socket = io("http://localhost:6909/", { transports: ['websocket'] });
 
-export default function TextBox() {
+export default function TextBox({roomid}) {
+    // console.log(roomid);
     const [textvalue, setTextvalue] = useState('rand value');
     const [inputvalue, setInputvalue] = useState('');
     const [outputvalue, setOutputvalue] = useState('');
+
+    function SocketEmit(channel,msg){
+        socket.emit(channel,{ roomid:roomid , code:msg});
+    }
+
     useEffect(() => {
+        socket.emit('join-room',{username:'ask for a username bruh',roomid})
         // Listen for any incoming messages and update textvalue
-        socket.on('receive-code-update', (val) => {
-            setTextvalue(val);
+        socket.on('receive-code-update', (code) => {
+            setTextvalue(code);
         });
-    },[socket]);
+    },[]);
 
     const Handlechange = React.useCallback((val, viewUpdate) => {
-        console.log('val:', val);
         setTextvalue(val);
-        socket.emit('update-code',val);
+        SocketEmit('update-code',val);
     }, []);
 
     function Handlechangeinput(e) {
         setInputvalue(e.target.value);
         const newval = e.target.value;
-        socket.emit('update-input', newval);
+        SocketEmit('update-input',newval);
     }
 
     async function sendreq(){
-        console.log(textvalue);
-        console.log(inputvalue);
         const requestData = {
             code: textvalue,
             input: inputvalue
@@ -54,12 +58,6 @@ export default function TextBox() {
     return (
     <div className="RHS">
         <div className="code-area">
-            {/* <textarea
-                style={{ height: '86vh', width: '100%',resize: "none" }}
-                id="text"
-                value={textvalue}
-                onChange={Handlechange}
-            ></textarea> */}
             <CodeMirror value={textvalue} height="86vh" onChange={Handlechange} extensions={[cpp()]} />
         </div>
         <div className="input-output">
