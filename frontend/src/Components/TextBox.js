@@ -11,9 +11,8 @@ import { cpp } from '@codemirror/lang-cpp';
 const apiUrl = 'http://localhost:6909/test'; // cpp compilation docker container 
 
 // Declare socket outside the component
-const socket = io("http://localhost:6909/", { transports: ['websocket'] });
 
-export default function TextBox({roomid}) {
+export default function TextBox({roomid , socket}) {
     // console.log(roomid);
     const [textvalue, setTextvalue] = useState('rand value');
     const [inputvalue, setInputvalue] = useState('');
@@ -24,11 +23,12 @@ export default function TextBox({roomid}) {
     }
 
     useEffect(() => {
-        socket.emit('join-room',{username:'ask for a username bruh',roomid})
-        // Listen for any incoming messages and update textvalue
         socket.on('receive-code-update', (code) => {
             setTextvalue(code);
         });
+        // socket.on('update-room-user-list', (newList) => {
+        //     setTextvalue('run');                                                                        
+        //   });
     },[]);
 
     const Handlechange = React.useCallback((val, viewUpdate) => {
