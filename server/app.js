@@ -37,31 +37,31 @@ function getSocketByUsernameInRoom(username, roomId) {
 
 io.on('connection', (socket) => {
     socket.on('join-room', ({ username, roomid }) => {
-        // socket.roomid = roomid;
-        // socket.username = username;
+        socket.roomid = roomid;
+        socket.username = username;
         socket.join(roomid);
         console.log(`${username} joined ${roomid}`);
-        // let usersList = roomUsers.get(roomid);
+        let usersList = roomUsers.get(roomid);
       
-        // if (!usersList) {
-        //   usersList = new Set();
-        // }
+        if (!usersList) {
+          usersList = new Set();
+        }
       
-        // usersList.add(username);
-        // roomUsers.set(roomid, usersList);
+        usersList.add(username);
+        roomUsers.set(roomid, usersList);
         
         // Send the updated user list as an array (Array.from) to the frontend
-        // socket.to(roomid).emit('update-room-user-list', Array.from(usersList));
-        socket.broadcast.emit('update-room-user-list', Array.from(usersList));
-        console.log('update sent');
+        console.log(usersList);
+        io.to(roomid).emit('update-room-user-list', Array.from(usersList));
+        // socket.broadcast.emit('update-room-user-list', Array.from(usersList));
     });
     
-    socket.on('signal', (data) => {
+    socket.on('send-signal', (data) => {
         // Forward the signal to the target user
         const targetSocket = getSocketByUsernameInRoom(data.target, socket.roomid);
         if (targetSocket) {
-            console.log(targetSocket);
-          targetSocket.emit('signal', { source: socket.username, signal: data.signal });
+            // console.log(targetSocket);
+            targetSocket.emit('knock-knock', { source: socket.username, signal: data.signal });
         }
     });
 

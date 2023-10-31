@@ -6,39 +6,61 @@ const peerConnection = new RTCPeerConnection(configuration);
 // const socket = io("http://localhost:6909/", { transports: ['websocket'] });
 
 export default function AudioRecorder({socket,username,roomid}) {
-  const [userList,setUserList] = useState(new Set());
-
-  // useEffect(() => {
-  //   socket.emit('join-room', { username, roomid });
-  //   console.log('joined room');
-  //   socket.on('update-room-user-list', (newList) => {
-  //     console.log('run');                                                                         
-  //   });
-  // },[]);
-
+  // const [userList,setUserList] = useState(new Set());
   const audioRef = useRef(null);
-  async function startStream(userList){
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  // ref: https://github.com/coding-with-chaim/group-video-final/blob/master/client/src/routes/Room.js
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then(stream => {
+        socket.emit('join-room', { username, roomid });
 
-      const filteredList = new Set([...userList].filter(user => user !== username));
-      console.log(filteredList);
-      filteredList.forEach(async (user) => {
-        // const peer = new SimplePeer({ initiator: true, stream });
+        socket.on('update-room-user-list', (newList) => {
+          const userList = new Set(newList);
+          const filteredList = new Set([...userList].filter(user => user !== username));
 
-        // peer.on('signal', async (data) => {
-        //   await socket.emit('signal', { target: user, roomid, signal: data });
-        // });
+          console.log(filteredList);
+  
+          filteredList.forEach(async (user) => {
+            const peer = createPeer(user,username,stream);
+          })
+        })
 
-        // peer.on('stream', (userStream) => {
-        //   audioRef.current.srcObject = userStream;
-        //   // Handle the remote user's video stream
-        // });
-      });
-    } catch (error) {
-      console.error('Error accessing media devices:', error);
-    }
-  };
+    })
+    // whenever someone rejoins, everyone refreshes their connections
+  },[]);
+
+
+  function createPeer(user,sender,stream){
+    const peer = new SimplePeer({
+      initiator: true,
+      trickle: false,
+      stream,
+    });
+
+    peer.on('signal', async (data) => {
+      // send an "signal" to other peers so that they can accept and send me "returning signal" so that we can complete connection
+      await socket.emit('send-signal', { target: user, roomid, signal: data });
+      await console.log('signal sent');
+    });
+
+    return peer;
+  }
+
+  function addPeer(incomingSignal,senderid,stream){
+    const peer = new SimplePeer({
+      initiator: false,
+      trickle: false,
+      stream,
+    })
+
+    peer.on("signal", signal => {
+        socket.emit("returning signal", { signal, senderid })
+    })
+
+    peer.signal(incomingSignal);
+
+    return peer;
+  }
+
   return (
     <div>
       <video id="microphone_audio" ref={audioRef} autoPlay />

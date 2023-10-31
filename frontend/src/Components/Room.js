@@ -12,13 +12,6 @@ const socket = io("http://localhost:6909/", { transports: ['websocket'] });
 export default function Room() {
     const {roomid,username} = useParams();
     // TODO: get the username
-    useEffect(() => {
-        socket.emit('join-room', { username, roomid });
-        console.log('joined room');
-        socket.on('update-room-user-list', (newList) => {
-          console.log('run');                                                                         
-        });
-      },[]);
     return (
     <div className='main'>
         <div className="LHS-container">
