@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 import SimplePeer from 'simple-peer';
-const configuration = { iceServers: [{ urls: "stun:stun.schlund.de:3478" }] };
-const peerConnection = new RTCPeerConnection(configuration);
-// const socket = io("http://localhost:6909/", { transports: ['websocket'] });
 
 export default function AudioRecorder({socket,username,roomid}) {
   // const [userList,setUserList] = useState(new Set());

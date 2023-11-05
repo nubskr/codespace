@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { Button } from '@mui/material';
 
-function App() {
-  // const [latexCont,setlatexCont] = useState('');
-  const [text, setText] = useState("");
+function App({text,setText}) {
+  const [tmptext,setTmpText] = useState(text);
   useEffect(() => {
     // Function to render LaTeX equations
   //   const renderEquations = () => {
@@ -49,7 +49,15 @@ function App() {
   function handleChange(e) {
     const inputval = e.target.value;
     const parsedText = renderTextWithKaTeX(inputval);
-    setText(parsedText);
+    setTmpText(parsedText);
+    // TODO: whenever this changes broadcast it to everyone in room
+  }
+
+  function handleSave(e) {
+    const inputval = e.target.value;
+    // const parsedText = renderTextWithKaTeX(inputval);
+    setText(tmptext);
+    // console.log(parsedText);
   }
 
  return (
@@ -58,7 +66,11 @@ function App() {
                 onChange={handleChange}
                 style={{ whiteSpace: 'pre-wrap' }}
             />
-            <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
+            {/* <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p> */}
+            <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: tmptext }} style={{ fontSize: '18px' }}></span></p>
+            <Button onClick={handleSave}>
+              Save
+            </Button>
         </div>
     );
 }

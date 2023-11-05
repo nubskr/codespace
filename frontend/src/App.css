@@ -12,6 +12,7 @@ textarea {
 }
 
 .LHS-container {
+  margin-left: 10%;
   max-height: 100vh;
   overflow: auto;
   padding: 10px; /* Adjust as needed for spacing */

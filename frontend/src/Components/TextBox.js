@@ -23,9 +23,9 @@ export default function TextBox({roomid , socket}) {
     }
 
     useEffect(() => {
-        socket.on('receive-code-update', (code) => {
-            setTextvalue(code);
-        });
+        // socket.on('receive-code-update', (code) => {
+        //     setTextvalue(code);
+        // });
         // socket.on('update-room-user-list', (newList) => {
         //     setTextvalue('run');                                                                        
         //   });
@@ -33,13 +33,13 @@ export default function TextBox({roomid , socket}) {
 
     const Handlechange = React.useCallback((val, viewUpdate) => {
         setTextvalue(val);
-        SocketEmit('update-code',val);
+        // SocketEmit('update-code',val);
     }, []);
 
     function Handlechangeinput(e) {
         setInputvalue(e.target.value);
         const newval = e.target.value;
-        SocketEmit('update-input',newval);
+        // SocketEmit('update-input',newval);
     }
 
     async function sendreq(){
