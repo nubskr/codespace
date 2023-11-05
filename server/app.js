@@ -2,8 +2,7 @@ const express = require('express');
 const { createServer } = require('node:http');
 const { Server } = require("socket.io");
 const cors = require('cors');
-const test = require('./routes/test.js');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 const app = express();
 app.use(cors());
@@ -17,84 +16,112 @@ app.get('/', (req, res) => {
     res.send('omg hewwo fren!!');
 });
 
-app.use('/test',test);
+const rooms = {};
+const username_to_socket = {};
+const pairSet = new Map();
 
-const roomUsers = new Map();
+// Function to add a pair to the set
+function addPair(key, value) {
+  pairSet.set(key, value);
+}
 
-function getSocketByUsernameInRoom(username, roomId) {
-    // Find the socket by username in the specified room
-    const socketsInRoom = io.sockets.adapter.rooms.get(roomId);
-    if (socketsInRoom) {
-      for (const socketId of socketsInRoom) {
-        const socket = io.sockets.sockets.get(socketId);
-        if (socket.username === username) {
-          return socket;
-        }
-      }
+// Function to check if a pair exists in the set
+function pairExists(key, value) {
+  return pairSet.get(key) === value;
+}
+
+function removeuserfrompair(){
+    // pairSet.clear();
+}
+
+function getUsersInRoom(roomid) {
+    if (rooms[roomid]) {
+      return rooms[roomid];
+    } else {
+      return [];
     }
-    return null;
 }
 
 io.on('connection', (socket) => {
-    socket.on('join-room', ({ username, roomid }) => {
-        socket.roomid = roomid;
-        socket.username = username;
-        socket.join(roomid);
-        console.log(`${username} joined ${roomid}`);
-        let usersList = roomUsers.get(roomid);
-      
-        if (!usersList) {
-          usersList = new Set();
+    socket.emit('welcome',{msg: 'welcome to room'});
+    socket.on('join room',(payload) => {
+        socket.roomid = payload.roomid;
+        socket.userid = payload.userid;
+        
+        socket.join(payload.roomid);
+        username_to_socket[payload.userid] = socket;
+
+        if (!rooms[payload.roomid]) {
+            rooms[payload.roomid] = [];
         }
       
-        usersList.add(username);
-        roomUsers.set(roomid, usersList);
-        
-        // Send the updated user list as an array (Array.from) to the frontend
-        console.log(usersList);
-        io.to(roomid).emit('update-room-user-list', Array.from(usersList));
-        // socket.broadcast.emit('update-room-user-list', Array.from(usersList));
+        rooms[payload.roomid].push(payload.userid);
+      
+        console.log(`${payload.userid} joined ${payload.roomid}`)
+        // console.log(`the user socket id is: ${socket.id}`);
+        const usersInRoom = getUsersInRoom(payload.roomid);
+        io.to(socket.roomid).emit('all users',{users: usersInRoom});
+    })
+    
+
+    socket.on('send-message', (payload) => {
+        io.to(socket.roomid).emit('receive message',{msg: payload.msg});
+    })
+
+    socket.on('sending offer', (payload) => {
+        // if a has already sent to b, then don't sent from b to a
+        if(!pairExists(payload.userToSignal,payload.callerID) && !pairExists(payload.callerID,payload.userToSignal)){
+            addPair(payload.userToSignal,payload.callerID);
+            console.log(`sending offer to ${payload.userToSignal} from ${payload.callerID}`);
+            const targetSocket = username_to_socket[payload.userToSignal];
+            // console.log(`target socket id is ${targetSocket.id}`);
+            io.to(targetSocket.id).emit('offer received', { signal: payload.signal, callerID: payload.callerID});
+        }
+        // io.to(socket.roomid).emit('receive message',{msg: payload.msg});
+    })
+
+    socket.on('sending reply', (payload) => {
+        const targetSocket = username_to_socket[payload.callerID];
+        console.log('sending reply');
+        // console.log(`userid is: ${[payload.userid]}`);
+        // console.log(`callerID is: ${[payload.callerID]}`);
+        // console.log(`sending to: ${payload.callerID}`);
+        if(targetSocket){
+            io.to(targetSocket.id).emit('reply received', { signal: payload.signal, id: payload.userid});
+        }
+        else{
+            console.log('nigger doesnt exist');
+        }
+    })
+
+    socket.on('private message', (payload) => {
+        const targetSocket = username_to_socket[payload.target];
+        if (targetSocket) {
+            targetSocket.emit('receive message', { msg: payload.msg });
+        }
+        else{
+            console.log('you messed something up nigger');
+        }
+    })
+
+    socket.on('get-users-in-room', (payload) => {
+        const usersInRoom = getUsersInRoom(payload.roomid);
+        socket.emit('users-in-room', { users: usersInRoom });
     });
     
-    socket.on('send-signal', (data) => {
-        // Forward the signal to the target user
-        const targetSocket = getSocketByUsernameInRoom(data.target, socket.roomid);
-        if (targetSocket) {
-            // console.log(targetSocket);
-            targetSocket.emit('knock-knock', { source: socket.username, signal: data.signal });
-        }
-    });
-
-    socket.on('update-code', ({roomid,code}) => {
-        socket.to(roomid).emit('receive-code-update',code);
-    })
-
-    socket.on('send-offer', ({roomid,offer}) => {
-        socket.to(roomid).emit('receive-offer',offer);
-    })
-
-    socket.on('send-answer', ({roomid,ans}) => {
-        socket.to(roomid).emit('receive-ans',ans);
-    })
-
-    socket.on('send-ice-cand', ({roomid,cand}) => {
-        socket.to(roomid).emit('receive-ice-cand',cand);
-    })
 
     socket.on('disconnect', () => {
-        // triggered whever a connection closes
-        const roomid = socket.roomid;
-        const username = socket.username;
-        let usersList = roomUsers.get(roomid);
-        if(usersList){
-            usersList.delete(username);
-            roomUsers.set(roomid,usersList);
-            // send updated list whenever someone leaves
-            socket.to(roomid).emit('update-room-user-list', Array.from(usersList));
-            socket.leave(roomid);
+        if (socket.roomid && rooms[socket.roomid]) {
+          // Remove the user from the room when they disconnect.
+          const index = rooms[socket.roomid].indexOf(socket.userid);
+          if (index !== -1) {
+            rooms[socket.roomid].splice(index, 1);
+          }
+          console.log(`${socket.userid} left ${socket.roomid}`);
         }
-        console.log('a connection closed');
-    })
+        removeuserfrompair();
+    });
+    
 })  
 
 server.listen(6909, () => {

@@ -12,7 +12,7 @@ function App(){
       <Routes>
           <Route path="/join" element={<JoinRoom />} />
           <Route path="/create" element={<CreateNewRoom />} />
-          <Route path="/room/:roomid/:username" element={<Room />} />
+          <Route path="/room/:roomid/:userid" element={<Room />} />
       </Routes>
     </BrowserRouter>
   );

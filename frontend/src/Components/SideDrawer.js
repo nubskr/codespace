@@ -54,7 +54,7 @@ const ContentContainer = styled('div')(({ open, theme }) => ({
   transition: 'padding 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer({toggleMic}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -77,6 +77,9 @@ export default function MiniDrawer() {
         >
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
+        <button onClick={toggleMic}>
+          toggle shit
+        </button>
         {/* Your drawer content goes here */}
       </Drawer>
       <ContentContainer open={open} theme={theme}>

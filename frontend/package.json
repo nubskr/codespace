@@ -14,6 +14,7 @@
     "@uiw/react-codemirror": "^4.21.20",
     "axios": "^1.5.1",
     "katex": "^0.16.9",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-latex": "^2.0.0",
@@ -21,6 +22,7 @@
     "react-scripts": "5.0.1",
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.7.2",
+    "styled-components": "^6.1.0",
     "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
