@@ -1,14 +1,10 @@
-import AudioRecorder from './AudioRecorder';
-import LateXparser from './LHS/LateXparser';
 import TextBox from './TextBox';
 import '../App.css'
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { useState , useRef } from 'react';
-import SideDrawer from './SideDrawer';
 import MiniDrawer from './SideDrawer';
 import Main_LHS from './LHS/Main_LHS';
-// import MenuIcon from '@mui/icons-material/Menu';
 import io from 'socket.io-client';  
 import SimplePeer from 'simple-peer';
 
@@ -167,12 +163,12 @@ export default function Room() {
     return (
     <div className='main'>
         <div className="LHS-container">
-            <Main_LHS />
+            <Main_LHS socketRef={socketRef}/>
         </div>
         <div className="RHS-container">
-            <TextBox roomid={roomid}/>
+            <TextBox socketRef={socketRef}/>
         </div>
-        <MiniDrawer toggleMic={toggleMic}/>
+        <MiniDrawer toggleMic={toggleMic} />
         {/* <AudioRecorder socket={socket} username={username} roomid={roomid}/> */}
         <Container>
       <StyledVideo muted ref={userVideo} autoPlay playsInline />

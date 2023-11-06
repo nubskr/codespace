@@ -63,6 +63,13 @@ io.on('connection', (socket) => {
         io.to(socket.roomid).emit('all users',{users: usersInRoom});
     })
     
+    socket.on('update-code', (payload) => {
+        io.to(socket.roomid).emit('receive-code-update',{code: payload.code});
+    });
+
+    socket.on('update-problem-statement', (payload) => {
+        io.to(socket.roomid).emit('receive-problem-statement',{statement: payload.statement});
+    });
 
     socket.on('send-message', (payload) => {
         io.to(socket.roomid).emit('receive message',{msg: payload.msg});

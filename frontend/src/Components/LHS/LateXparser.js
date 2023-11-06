@@ -3,75 +3,65 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import { Button } from '@mui/material';
 
-function App({text,setText}) {
-  const [tmptext,setTmpText] = useState(text);
+function App({text,setText,input,setInput,handleClose}) {
+  const [tmptext,setTmpText] = useState('');
+  const [inputval,setInputVal] = useState(input);
+
   useEffect(() => {
-    // Function to render LaTeX equations
-  //   const renderEquations = () => {
-  //     const sanitizedLatex = latexCont
-  //     .replace(/\n/g, '\\\\')
-  //     .replace(/\fjfj/g, '\\\\[12pt]\n')
-  //     .replace(/\s/g, '\\ ') // Replace spaces with \ 
-  //     .replace(/\*/g, '\\times') // Replace * with \times
-  //  // Replace line breaks with \\
-
-
-  //     katex.render(sanitizedLatex, document.getElementById('inline-math'), {
-  //       throwOnError: false
-  //     });
-  //   };
-
-  //   // Wait for the component to be mounted and then render the equations
-  //   renderEquations();
-    // renderTextWithKaTeX(latexCont);
-  }, []);
+    setTmpText(renderTextWithKaTeX(inputval));
+  }, [inputval]);
 
   function renderTextWithKaTeX(text) {
     const kaTeXPattern = /\$\$([^$]+)\$\$/g;
+    const imagePattern = /\${img:([^}]+)}/g; // Updated image pattern
 
-    const renderedText = text.replace(kaTeXPattern, (match, content) => {
-        try {
-            const rendered = katex.renderToString(content, {
-                throwOnError: false,
-            });
-            return `$$${rendered}$$`; // Keep the original formatting inside $$
-        } catch (error) {
-            console.error("KaTeX rendering error:", error);
-            return match; // Return the original text if there's an error
-        }
-    });
+    const renderedText = text
+        .replace(kaTeXPattern, (match, content) => {
+            try {
+                const rendered = katex.renderToString(content, {
+                    throwOnError: false,
+                });
+                return `$$${rendered}$$`; // Keep the original formatting inside $$
+            } catch (error) {
+                console.error("KaTeX rendering error:", error);
+                return match; // Return the original text if there's an error
+            }
+        })
+        .replace(imagePattern, (match, link) => {
+            return `<img src="${link}" alt="Image" />`; // Render image tag
+        });
 
-    // Preserve line breaks and formatting, and remove unmatched $$
-    return renderedText.replace(/\n/g, "<br>").replace(/\t/g, "&nbsp;&nbsp;")
-        .replace(/\$\$/g, "").replace(/\$/g, "&#36;"); // Remove unmatched $$ and escape single $
+    // Preserve line breaks and formatting, remove unmatched $$ and escape single $
+    return renderedText
+        .replace(/\n/g, "<br>")
+        .replace(/\t/g, "&nbsp;&nbsp;")
+        .replace(/\$\$/g, "")
+        .replace(/\$/g, "&#36");
   }
 
+
   function handleChange(e) {
-    const inputval = e.target.value;
-    const parsedText = renderTextWithKaTeX(inputval);
-    setTmpText(parsedText);
+    setInputVal(e.target.value);
     // TODO: whenever this changes broadcast it to everyone in room
   }
 
   function handleSave(e) {
-    const inputval = e.target.value;
-    // const parsedText = renderTextWithKaTeX(inputval);
-    setText(tmptext);
-    // console.log(parsedText);
+    setInput(inputval);
+    handleClose();
   }
 
  return (
-        <div>
+        <form>
             <textarea
                 onChange={handleChange}
                 style={{ whiteSpace: 'pre-wrap' }}
+                defaultValue={inputval}
             />
-            {/* <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p> */}
             <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: tmptext }} style={{ fontSize: '18px' }}></span></p>
             <Button onClick={handleSave}>
               Save
             </Button>
-        </div>
+        </form>
     );
 }
 

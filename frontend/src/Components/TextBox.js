@@ -1,4 +1,3 @@
-import io from 'socket.io-client';
 import React, { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import axios from 'axios';
@@ -10,36 +9,34 @@ import { cpp } from '@codemirror/lang-cpp';
 // Replace with the URL you want to send the request to
 const apiUrl = 'http://localhost:6909/test'; // cpp compilation docker container 
 
-// Declare socket outside the component
-
-export default function TextBox({roomid , socket}) {
-    // console.log(roomid);
+export default function TextBox({socketRef}) {
     const [textvalue, setTextvalue] = useState('rand value');
     const [inputvalue, setInputvalue] = useState('');
     const [outputvalue, setOutputvalue] = useState('');
 
     function SocketEmit(channel,msg){
-        socket.emit(channel,{ roomid:roomid , code:msg});
+        if(socketRef.current){
+            socketRef.current.emit(channel,{code:msg});
+        }
     }
 
     useEffect(() => {
-        // socket.on('receive-code-update', (code) => {
-        //     setTextvalue(code);
-        // });
-        // socket.on('update-room-user-list', (newList) => {
-        //     setTextvalue('run');                                                                        
-        //   });
-    },[]);
+        if(socketRef.current){
+            socketRef.current.on('receive-code-update', (payload) => {
+                setTextvalue(payload.code);
+            });   
+        }
+    },[socketRef.current]);
 
     const Handlechange = React.useCallback((val, viewUpdate) => {
         setTextvalue(val);
-        // SocketEmit('update-code',val);
+        SocketEmit('update-code',val);
     }, []);
 
     function Handlechangeinput(e) {
         setInputvalue(e.target.value);
         const newval = e.target.value;
-        // SocketEmit('update-input',newval);
+        SocketEmit('update-input',newval);
     }
 
     async function sendreq(){

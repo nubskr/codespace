@@ -24,8 +24,7 @@ const style = {
   p: 4,
 };
 
-export default function ProblemInputModal({text,setText}) {
-//   const classes = useStyles();
+export default function ProblemInputModal({text,setText,input,setInput}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -49,10 +48,9 @@ export default function ProblemInputModal({text,setText}) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Edit problem statement
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <LateXparser text={text} setText={setText}/>
-            we edit here
-          </Typography>
+          {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}> */}
+            <LateXparser text={text} setText={setText} input={input} setInput={setInput} handleClose={handleClose}/>
+          {/* </Typography> */}
         </Box>
       </Modal>
     </div>
