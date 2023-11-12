@@ -52,9 +52,8 @@ function App({text,setText,input,setInput,handleClose}) {
 
  return (
         <form>
-            <textarea
+            <textarea style={{whiteSpace: 'pre-wrap', width: '100%', height: '100%', overflow: 'auto' }}
                 onChange={handleChange}
-                style={{ whiteSpace: 'pre-wrap' }}
                 defaultValue={inputval}
             />
             <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: tmptext }} style={{ fontSize: '18px' }}></span></p>

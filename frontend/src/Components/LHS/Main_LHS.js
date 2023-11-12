@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ProblemInputModal from './ProblemInputModal'
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import NestedModal from './NestedModal';
 
 export default function Main_LHS({socketRef}) {
   const [text, setText] = useState("");
@@ -57,7 +58,8 @@ export default function Main_LHS({socketRef}) {
   return (
     <div>
       <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
-      <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/>
+      {/* <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/> */}
+      <NestedModal text={text} setText={setText} input={input} setInput={setInput}/>
     </div>
   )
 }
