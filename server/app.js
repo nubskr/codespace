@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 var bodyParser = require('body-parser');
 const test = require("./routes/test")
+const submit = require("./routes/submit")
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,7 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use('/test',test)
+app.use('/submit',submit)
 
 app.get('/', (req, res) => {
     res.send('omg hewwo fren!!');

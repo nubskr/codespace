@@ -8,12 +8,12 @@ const docker = new Docker();
 router.post('/', (req,res) => {
   const cppfilepath = path.join(__dirname,'test1','a.cpp');
   const inputfilepath = path.join(__dirname,'test1','input.txt');
-  const outputfilepath = path.join(__dirname,'test1','output.txt');
+  const verdictfilepath = path.join(__dirname,'test1','verdict.txt');
   const {code,input} = req.body;
 console.log(code);
 console.log(input);
   const containerOptions = {
-    Image: 'nubskr/compiler:UwU', // Replace with the image you want to run
+    Image: 'nubskr/compiler:submission', // Replace with the image you want to run
     Cmd: ['./doshit.sh'],
     Binds: [
       // Define volume bindings in the format: hostPath:containerPath
