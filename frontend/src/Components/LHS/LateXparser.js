@@ -9,6 +9,7 @@ function App({text,setText,input,setInput,handleClose}) {
 
   useEffect(() => {
     setTmpText(renderTextWithKaTeX(inputval));
+    setText(inputval);
   }, [inputval]);
 
   function renderTextWithKaTeX(text) {

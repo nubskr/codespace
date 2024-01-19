@@ -5,6 +5,7 @@ const cors = require('cors');
 var bodyParser = require('body-parser');
 const test = require("./routes/test")
 const submit = require("./routes/submit")
+const api1 = require("./routes/api")
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 app.use('/test',test)
 app.use('/submit',submit)
+app.use('/api',api1)
 
 app.get('/', (req, res) => {
     res.send('omg hewwo fren!!');
