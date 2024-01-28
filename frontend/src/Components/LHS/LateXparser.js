@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 
 function App({text,setText,input,setInput,handleClose}) {
   const [tmptext,setTmpText] = useState('');
-  const [inputval,setInputVal] = useState(input);
+  const [inputval,setInputVal] = useState(input); // this is the main stuff
 
   useEffect(() => {
     setTmpText(renderTextWithKaTeX(inputval));

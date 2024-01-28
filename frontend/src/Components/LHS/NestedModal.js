@@ -24,7 +24,7 @@ const style = {
 
 const api = 'http://localhost:6909/api/new'
 
-function ChildModal({text,setText,input,setInput}) {
+function ChildModal({socketRef, text,setText,input,setInput}) {
   const [open, setOpen] = React.useState(false);
   const [problemName, setProblemName] = React.useState('');
   const [statement, setStatement] = React.useState('');
@@ -61,7 +61,6 @@ function ChildModal({text,setText,input,setInput}) {
 
   return (
     <React.Fragment>
-      <ProblemList />
       <Button onClick={handleOpen}>Create</Button>
       <Modal
         open={open}
@@ -122,7 +121,7 @@ function ChildModal({text,setText,input,setInput}) {
   );
 }
 
-export default function NestedModal({text,setText,input,setInput}) {
+export default function NestedModal({socketRef, setCurrentProb,setSampleOutput,setSampleInput,setProblemName,text,setText,input,setInput}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -130,7 +129,7 @@ export default function NestedModal({text,setText,input,setInput}) {
   const handleClose = () => {
     setOpen(false);
   };
-
+  // console.log("input is " + input);
   return (
     <div>
       <Button onClick={handleOpen}>Open modal</Button>
@@ -145,7 +144,8 @@ export default function NestedModal({text,setText,input,setInput}) {
           {/* <p id="parent-modal-description">
             Problems
           </p> */}
-          <ChildModal  text={text} setText={setText} input={input} setInput={setInput} handleClose={handleClose}/>
+          <ProblemList key="123" socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} setInput={setInput}/>
+          <ChildModal socketRef={socketRef} text={text  } setText={setText} input={input} setInput={setInput} handleClose={handleClose}/>
         </Box>
       </Modal>
     </div>

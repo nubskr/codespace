@@ -60,7 +60,7 @@ export default function Room() {
         setIsMicOn(!isMicOn);
         // doesnt work for some reason, but we'll figure it out
     };
-    
+
     useEffect(() => {
         let audioStream = null;
         socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
