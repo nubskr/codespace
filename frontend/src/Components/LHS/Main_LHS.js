@@ -6,12 +6,11 @@ import NestedModal from './NestedModal';
 import axios from 'axios';
 const api = 'http://localhost:6909/api/problem-list';
 
-export default function Main_LHS({socketRef}) {
+export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
   // when we change the problem, just broadcast the problem id, and everything will change
   const [text, setText] = useState("");
   const [input, setInput] = useState(""); // current raw statement
   const [problemName,setProblemName] = useState("");
-  const [currentProbId,setCurrentProb] = useState("");
   const [sampleInput,setSampleInput] = useState("");
   const [sampleOutput,setSampleOutput] = useState("");
   const [data,setData] = useState("");
@@ -109,7 +108,7 @@ function go(problem_package){
     <div>
       <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
       {/* <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/> */}
-      <NestedModal socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} text={text} setText={setText} input={input} setInput = {setInput}/>
+      <NestedModal socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} text={text} setText={setText} input={input} setInput = {setInput} />
     </div>
   )
 }

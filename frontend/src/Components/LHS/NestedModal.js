@@ -121,7 +121,7 @@ function ChildModal({socketRef, text,setText,input,setInput}) {
   );
 }
 
-export default function NestedModal({socketRef, setCurrentProb,setSampleOutput,setSampleInput,setProblemName,text,setText,input,setInput}) {
+export default function NestedModal({socketRef, setCurrentProb,setSampleOutput,setSampleInput,setProblemName,text,setText,input,setInput,curr}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);

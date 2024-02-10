@@ -90,5 +90,12 @@ router.get('/problem-list',async (req,res) => {
   res.json(data);
 })
 
+router.post('/get-test-package', async (req,res) => {
+  const {id} = req.body;
+  // console.log("requested test id is " + id);
+  const data = await tests_model.find({id: id});
+  res.json(data);
+})
+
 module.exports = router;
 

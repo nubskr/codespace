@@ -8,11 +8,14 @@ import { cpp } from '@codemirror/lang-cpp';
 
 // Replace with the URL you want to send the request to
 const apiUrl = 'http://localhost:6909/test'; // cpp compilation docker container 
+const submitUrl = 'http://localhost:6909/submit'; 
 
-export default function TextBox({socketRef}) {
+export default function TextBox({socketRef,currentProbId}) {
+    console.log('I am textbox and the current problem id is ' + currentProbId);
     const [textvalue, setTextvalue] = useState('rand value');
     const [inputvalue, setInputvalue] = useState('');
     const [outputvalue, setOutputvalue] = useState('');
+    const [verdict, setVerdict] = useState('');
 
     function SocketEmit(channel,msg){
         if(socketRef.current){
@@ -39,7 +42,7 @@ export default function TextBox({socketRef}) {
         SocketEmit('update-input',newval);
     }
 
-    async function sendreq(){
+    async function sendcompilereq(){
         const requestData = {
             code: textvalue,
             input: inputvalue
@@ -48,10 +51,26 @@ export default function TextBox({socketRef}) {
         setOutputvalue(response.data);
     }
 
+    async function sendsubmitreq(){
+        const requestData = {
+            code: textvalue,
+            problem_id: currentProbId
+        };
+        const response = await axios.post(submitUrl, requestData);
+        setOutputvalue(response.data);
+    }
+
     function Handlecompile(e) {
-        sendreq();
+        sendcompilereq();
     }
     
+    function Handlesubmit(e) {
+        const res = sendsubmitreq();
+        // setVerdict(res);
+        console.log(res);
+    }
+    
+
     return (
     <div className="RHS">
         <div className="code-area">
@@ -71,7 +90,11 @@ export default function TextBox({socketRef}) {
   Output: {outputvalue}
 </div>
         </div>
-        <button onClick={Handlecompile}>Compile</button>
+        <div>
+            <button onClick={Handlecompile}>Compile</button>
+            <button onClick={Handlesubmit}>Submit</button>
+            {/* <div>{verdict}</div> */}
+        </div>
     </div>
     )
 }

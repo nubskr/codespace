@@ -19,13 +19,18 @@ using namespace std;
 #define int long long
 
 int32_t main(){ios::sync_with_stdio(0); cin.tie(0); // Use functions above this
-auto solve = [&]() {
-   int a,b; cin >> a >> b; cout << a + b;
+auto solve = [&](int t) {
+   int a,b;
+   cin >> a >> b;
+   cout << (a+b+1);
+   if(t!=0){
+      cout << endl;
+   }
 };
 
 int t = 1;
-// cin >> t;
+cin >> t;
 
-while(t--){solve();}
+while(t--){solve(t);}
 cerr << "\nTime: " << 1000 * clock() / CLOCKS_PER_SEC << "ms\n";
 }

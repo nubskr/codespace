@@ -54,7 +54,7 @@ function ProblemList({socketRef , setCurrentProb , setProblemName, setSampleInpu
       SocketEmit('change-main-problem',problem_id);
       console.log("sending this package ");
       console.log(problem_package);
-      setCurrentProb(problem_id);
+      await setCurrentProb(problem_id);
       go(problem_package);
       console.log("Problem changed to " + problem_id);
     }

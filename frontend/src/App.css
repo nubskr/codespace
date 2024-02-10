@@ -2,9 +2,10 @@
   background-color: white;
   font-size: 17px;
   display: grid;
-  overflow: hidden;
+  /* overflow: hidden; */
   grid-template-columns: auto 1fr;
   gap: 10px; /* Adjust as needed to create a gap between components */
+  flex: 1;
 }
 
 textarea {

@@ -50,6 +50,7 @@ export default function Room() {
     console.log(`userid is: ${userid}`);
     const [peers,setPeers] = useState([]);
     const [isMicOn, setIsMicOn] = useState(true);
+    const [currentProbId,setCurrentProb] = useState('UwU');
     const userVideo = useRef();
     const socketRef = useRef();
     const peersRef = useRef([]);
@@ -163,10 +164,10 @@ export default function Room() {
     return (
     <div className='main'>
         <div className="LHS-container">
-            <Main_LHS socketRef={socketRef}/>
+            <Main_LHS socketRef={socketRef} currentProbId={currentProbId} setCurrentProb={setCurrentProb}/>
         </div>
         <div className="RHS-container">
-            <TextBox socketRef={socketRef}/>
+            <TextBox socketRef={socketRef} currentProbId={currentProbId}/>
         </div>
         <MiniDrawer toggleMic={toggleMic} />
         {/* <AudioRecorder socket={socket} username={username} roomid={roomid}/> */}
