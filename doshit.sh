@@ -1,15 +1,31 @@
 #!/bin/sh
 cd ./contest
-g++ a.cpp
-./a.out < input.txt > output.txt
-# compare the file with the expected_output file then put the result in verdict file
+
 rm compare.txt
 rm verdict.txt
-diff output.txt expected_output.txt >> compare.txt
-# cat compare.txt
-if [[ -s compare.txt ]]; then
-    echo "WA" >> verdict.txt
+
+g++ -o a.out a.cpp
+
+
+if [ $? -eq 0 ]; then
+    # Run the program with timeout
+    timeout 2s ./a.out < input.txt > output.txt
+
+    # Check the exit status of the program
+    if [ $? -eq 124 ]; then
+        echo "Program took too long to execute. Terminating."
+        echo "Time Limit Exceeded" >> verdict.txt
+    else
+        # executed successfully
+        diff output.txt expected_output.txt >> compare.txt
+        if [[ -s compare.txt ]]; then
+            echo "Wrong Answer" >> verdict.txt
+        else
+            echo "Accepted" >> verdict.txt
+        fi
+    fi
 else
-    echo "AC" >> verdict.txt
+    echo "Compilation Error" >> verdict.txt
 fi
+
 echo done

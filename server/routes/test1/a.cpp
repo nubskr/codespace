@@ -20,12 +20,12 @@ using namespace std;
 
 int32_t main(){ios::sync_with_stdio(0); cin.tie(0); // Use functions above this
 auto solve = [&](int t) {
-   int a,b;
-   cin >> a >> b;
-   cout << (a+b+1);
-   if(t!=0){
-      cout << endl;
-   }
+  int a,b;
+  cin >> a >> b;
+  cout << a+b;
+  if(t!=0){
+    cout << endl; // doesnt even run
+  }
 };
 
 int t = 1;
