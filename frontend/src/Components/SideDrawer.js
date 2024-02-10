@@ -6,7 +6,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const drawerWidth = 180 ;
-const closedWidth = 30;
+const closedWidth = 17;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -54,9 +54,25 @@ const ContentContainer = styled('div')(({ open, theme }) => ({
   transition: 'padding 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
 }));
 
-export default function MiniDrawer({toggleMic}) {
+const emojis = ['🧑', '👨', '🧔', '', '', '', '', '']; // Fill in with your desired emojis
+
+const MemberCard = ({ id , member}) => {
+  const index = id % emojis.length;
+  const emoji = emojis[index];
+
+  return (
+    <div className="member-card">
+      <span className="emoji">{emoji}</span>
+      <span className="id">{member}</span>
+    </div>
+  );
+};
+
+export default function MiniDrawer({toggleMic,members_in_room}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  console.log(members_in_room);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -80,6 +96,14 @@ export default function MiniDrawer({toggleMic}) {
         <button onClick={toggleMic}>
           toggle shit
         </button>
+        <div>
+          <p>Members in room</p>
+          <div>
+            {members_in_room.map((member, index) => (
+          <MemberCard key={index} id={index} member={member} />
+        ))}
+          </div>
+        </div>
         {/* Your drawer content goes here */}
       </Drawer>
       <ContentContainer open={open} theme={theme}>

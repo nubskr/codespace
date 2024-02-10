@@ -119,18 +119,26 @@ io.on('connection', (socket) => {
     })
 
     socket.on('get-users-in-room', (payload) => {
-        const usersInRoom = getUsersInRoom(payload.roomid);
+        const usersInRoom = getUsersInRoom(socket.roomid);
+        console.log('someone is asking around');
         socket.emit('users-in-room', { users: usersInRoom });
     });
-    
+
 
     socket.on('disconnect', () => {
+        // this is trash bruh
         if (socket.roomid && rooms[socket.roomid]) {
           // Remove the user from the room when they disconnect.
           const index = rooms[socket.roomid].indexOf(socket.userid);
+
           if (index !== -1) {
             rooms[socket.roomid].splice(index, 1);
           }
+          const usersInRoom = getUsersInRoom(socket.roomid);
+          io.to(socket.roomid).emit('users-in-room', { users: usersInRoom });
+
+          console.log('users currently in room are: ' + usersInRoom);
+          
           console.log(`${socket.userid} left ${socket.roomid}`);
         }
         removeuserfrompair();

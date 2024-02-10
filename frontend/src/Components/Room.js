@@ -51,6 +51,7 @@ export default function Room() {
     const [peers,setPeers] = useState([]);
     const [isMicOn, setIsMicOn] = useState(true);
     const [currentProbId,setCurrentProb] = useState('UwU');
+    const [members_in_room,setMembersInRoom] = useState([userid]);
     const userVideo = useRef();
     const socketRef = useRef();
     const peersRef = useRef([]);
@@ -100,6 +101,7 @@ export default function Room() {
               }
             })
             setPeers(peers);
+            socketRef.current.emit('get-users-in-room');
           })
     
           socketRef.current.on('offer received', (payload) => {
@@ -124,6 +126,11 @@ export default function Room() {
             }
     
             item.peer.signal(payload.signal);
+          })
+
+          socketRef.current.on('users-in-room',(payload) => {
+            console.log('users in room are ' + payload.users);
+            setMembersInRoom(payload.users);
           })
     
         })
@@ -169,7 +176,7 @@ export default function Room() {
         <div className="RHS-container">
             <TextBox socketRef={socketRef} currentProbId={currentProbId}/>
         </div>
-        <MiniDrawer toggleMic={toggleMic} />
+        <MiniDrawer toggleMic={toggleMic} members_in_room={members_in_room}/>
         {/* <AudioRecorder socket={socket} username={username} roomid={roomid}/> */}
         <Container>
       <StyledVideo muted ref={userVideo} autoPlay playsInline />
