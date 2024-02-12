@@ -86,18 +86,16 @@ export default function MiniDrawer({toggleMic,members_in_room}) {
     <div>
       <Drawer variant="permanent" open={open}>
         <IconButton
-          color="inherit"
+          // color="inherit"
           aria-label="open drawer"
           onClick={open ? handleDrawerClose : handleDrawerOpen}
           edge="start"
         >
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
-        <button onClick={toggleMic}>
-          toggle shit
-        </button>
         <div>
-          <p>Members in room</p>
+          {open ? <p>Members in room</p> : <p></p>}
+          {/* <p>Members in room</p> */}
           <div>
             {members_in_room.map((member, index) => (
           <MemberCard key={index} id={index} member={member} />

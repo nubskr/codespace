@@ -4,6 +4,9 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import NestedModal from './NestedModal';
 import axios from 'axios';
+import CopyLinkButton from './ShareRoom';
+import { useParams } from 'react-router-dom';
+
 const api = 'http://localhost:6909/api/problem-list';
 
 export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
@@ -14,6 +17,9 @@ export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
   const [sampleInput,setSampleInput] = useState("");
   const [sampleOutput,setSampleOutput] = useState("");
   const [data,setData] = useState("");
+
+  const {roomid} = useParams();
+  const sharedlink = `http://localhost:3000/room/${roomid}`
 
   function renderTextWithKaTeX(text) {
     const kaTeXPattern = /\$\$([^$]+)\$\$/g; // $$*insert math here*$$
@@ -108,7 +114,10 @@ function go(problem_package){
     <div>
       <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
       {/* <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/> */}
+      <CopyLinkButton link={sharedlink} />
+
       <NestedModal socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} text={text} setText={setText} input={input} setInput = {setInput} />
+
     </div>
   )
 }
