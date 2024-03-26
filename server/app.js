@@ -18,7 +18,7 @@ const limiter = rateLimit({
 })
 
 // Apply the rate limiting middleware to all requests.
-app.use(limiter)
+// app.use(limiter)
 
 app.use(cors());
 const server = createServer(app);
@@ -29,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 app.use('/test',test)
 app.use('/submit',submit)
+app.use('/api',limiter);
 app.use('/api',api1)
 
 app.get('/', (req, res) => {

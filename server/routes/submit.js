@@ -43,9 +43,10 @@ router.post('/', (req,res) => {
 console.log(code);
 console.log(problem_id);
   const containerOptions = {
-    Image: 'nubskr/compiler:advanced', // Replace with the image you want to run
+    Image: 'nubskr/compiler:advanced',
     Cmd: ['./doshit.sh'],
     Binds: [
+      // TODO: make new files when a submission comes with uuid and delete once the response is sent
       // Define volume bindings in the format: hostPath:containerPath
       '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
     ],

@@ -13,7 +13,7 @@ router.post('/', (req,res) => {
 console.log(code);
 console.log(input);
   const containerOptions = {
-    Image: 'nubskr/compiler:UwU', // Replace with the image you want to run
+    Image: 'nubskr/compiler:UwU',
     Cmd: ['./doshit.sh'],
     Binds: [
       // Define volume bindings in the format: hostPath:containerPath
