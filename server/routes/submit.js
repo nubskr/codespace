@@ -15,7 +15,7 @@ router.post('/', (req,res) => {
   const verdictfilepath = path.join(__dirname,'test1','verdict.txt');
   const {code,problem_id} = req.body;
   // get the correct output file
-
+  console.log(problem_id);
   async function getTestPackageData() {  
     try {
       const response = await fetch(targetRouteUrl, {
@@ -63,7 +63,11 @@ console.log(problem_id);
   async function go(){
     // change the input and cpp file to the req
     await changeFile(cppfilepath,code);
-    
+    console.log("problem id is " + problem_id);
+    if(problem_id===null){
+      res.send("You need to choose a problem");
+      return;
+    }
     test_package = await getTestPackageData();
     console.log(test_package[0]);
     const {expected_output,main_tests} = test_package[0];

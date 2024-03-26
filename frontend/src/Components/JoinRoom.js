@@ -44,8 +44,10 @@ export default function JoinRoom() {
               onChange={handleRoomidChange}
             />
           </div>
-          <button type="submit">Login</button>
+          <br />
+        <button type="submit">Login</button>
         </form>
+        {/* <button>Hi</button> */}
       </div>
     );
 }

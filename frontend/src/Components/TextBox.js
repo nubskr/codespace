@@ -9,10 +9,11 @@ import { cpp } from '@codemirror/lang-cpp';
 // Replace with the URL you want to send the request to
 const apiUrl = 'http://localhost:6909/test'; // cpp compilation docker container 
 const submitUrl = 'http://localhost:6909/submit'; 
+const defaultText = "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n int t;\n cin >> t;\n while(t--){\n\n }\n}";
 
 export default function TextBox({socketRef,currentProbId}) {
     console.log('I am textbox and the current problem id is ' + currentProbId);
-    const [textvalue, setTextvalue] = useState('rand value');
+    const [textvalue, setTextvalue] = useState(defaultText);
     const [inputvalue, setInputvalue] = useState('');
     const [outputvalue, setOutputvalue] = useState('');
     const [verdict, setVerdict] = useState('');
@@ -43,21 +44,33 @@ export default function TextBox({socketRef,currentProbId}) {
     }
 
     async function sendcompilereq(){
-        const requestData = {
-            code: textvalue,
-            input: inputvalue
-        };
-        const response = await axios.post(apiUrl, requestData);
-        setOutputvalue(response.data);
+        setOutputvalue("Submitting..");
+        try{
+            const requestData = {
+                code: textvalue,
+                input: inputvalue
+            };
+            const response = await axios.post(apiUrl, requestData);
+            setOutputvalue(response.data);
+        }
+        catch(error){
+            setOutputvalue(error.message);
+        }
     }
 
     async function sendsubmitreq(){
-        const requestData = {
-            code: textvalue,
-            problem_id: currentProbId
-        };
-        const response = await axios.post(submitUrl, requestData);
-        setOutputvalue(response.data);
+        setOutputvalue("Submitting..");
+        try{
+            const requestData = {
+                code: textvalue,
+                problem_id: currentProbId
+            };
+            const response = await axios.post(submitUrl, requestData);
+            setOutputvalue(response.data);
+        }
+        catch(error){
+            setOutputvalue(error.message);
+        }
     }
 
     function Handlecompile(e) {

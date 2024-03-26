@@ -8,6 +8,8 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useNavigate, useParams } from 'react-router-dom';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import { IconButton } from '@mui/material';
 
 export default function GetUsername() {
     const [username,setUsername] = React.useState('');
@@ -51,7 +53,11 @@ export default function GetUsername() {
           size="large"
           sx={{ width: '300px'}} // Adjust the width here
         />
-        <Button type="submit" variant="contained" size="large">Submit</Button>
+        {/* <br/> */}
+        <IconButton variant="contained" color="primary" type="submit">
+          <ArrowForwardRoundedIcon fontSize='large'/>
+        </IconButton>
+        {/* <Button type="submit" variant="contained" size="large" sx={{ display: 'block', margin: '0 auto', padding: '1px' }}>Join</Button> */}
         </form>
       </Box>
     );

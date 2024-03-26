@@ -53,7 +53,7 @@ export default function Room() {
     console.log(`userid is: ${userid}`);
     const [peers,setPeers] = useState([]);
     const [isMicOn, setIsMicOn] = useState(true);
-    const [currentProbId,setCurrentProb] = useState('UwU');
+    const [currentProbId,setCurrentProb] = useState(null);
     const [members_in_room,setMembersInRoom] = useState([userid]);
     const userVideo = useRef();
     const socketRef = useRef();
@@ -62,13 +62,21 @@ export default function Room() {
     // TODO: we join room here
     
     const toggleMic = () => {
-        setIsMicOn(!isMicOn);
+      console.log("hey man!");
+      turnonmic();
+        // setIsMicOn(!isMicOn);
         // doesnt work for some reason, but we'll figure it out
     };
+    
 
-    useEffect(() => {
+    useEffect(()=>{
+      // socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
+      // socketRef.current.emit('join room',{roomid: roomid , userid: userid});
+    },[])
+
+    function turnonmic(){
         let audioStream = null;
-        socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
+        // socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
         navigator.mediaDevices.getUserMedia({video: false, audio: true}).then(stream => {
             audioStream = stream;
             if(!isMicOn){
@@ -82,8 +90,9 @@ export default function Room() {
       console.log('breaks applied');
     }
             }
-          socketRef.current.emit('join room',{roomid: roomid , userid: userid});
-    
+          // socketRef.current.emit('join room',{roomid: roomid , userid: userid});
+          socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
+      socketRef.current.emit('join room',{roomid: roomid , userid: userid});
           socketRef.current.on('receive message',(payload) => {
             console.log(`I am ${userid}`);
             console.log(payload.msg);
@@ -137,7 +146,7 @@ export default function Room() {
           })
     
         })
-    },[])
+      }
 
     function createPeer(userToSignal, callerID, stream) {
         const peer = new SimplePeer({

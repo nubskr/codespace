@@ -4,9 +4,10 @@ import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
 
 const drawerWidth = 180 ;
-const closedWidth = 17;
+const closedWidth = 23;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -93,6 +94,12 @@ export default function MiniDrawer({toggleMic,members_in_room}) {
         >
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
+
+        <IconButton variant="contained" color="primary" onClick={toggleMic}>
+          <HeadsetMicIcon />
+        </IconButton>
+        
+
         <div>
           {open ? <p>Members in room</p> : <p></p>}
           {/* <p>Members in room</p> */}

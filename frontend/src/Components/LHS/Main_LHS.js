@@ -114,7 +114,7 @@ function go(problem_package){
     <div>
       <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
       {/* <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/> */}
-      <CopyLinkButton link={sharedlink} />
+      {/* <CopyLinkButton link={sharedlink} /> */}
 
       <NestedModal socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} text={text} setText={setText} input={input} setInput = {setInput} />
 

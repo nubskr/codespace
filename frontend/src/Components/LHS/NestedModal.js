@@ -132,7 +132,7 @@ export default function NestedModal({socketRef, setCurrentProb,setSampleOutput,s
   // console.log("input is " + input);
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen}>View Problems</Button>
       <Modal
         open={open}
         onClose={handleClose}

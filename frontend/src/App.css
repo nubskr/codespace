@@ -45,3 +45,8 @@ button {
   margin-top: 10px; /* Adjust margin as needed */
   max-width: 90px;
 }
+
+.username {
+  display: flex;
+  flex-direction:row;
+}
