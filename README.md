@@ -10,6 +10,10 @@ I was curious about how Codeforces worked, so I made my own version :)
 - **Problem Packages**: Store and manage problem packages.
 - **Math and Image Rendering**: Support for rendering math equations and images(or any media for that matter) in problem statements.
 
+## Demo Video
+
+[![Demo Video](https://img.youtube.com/vi/9eF_-2vc_9s/0.jpg)](https://www.youtube.com/watch?v=9eF_-2vc_9s)
+
 ## System Architecture
 
 ![Architecture](./architecture.PNG)
@@ -31,6 +35,7 @@ high-level architecture of the system.
 - **Math Rendering**: Used KaTeX for rendering math equations.
 - **Rate Limiting**: Added to each compilation API call to prevent abuse.
 
+
 ## Usage
 
 To use this project, follow these steps:
@@ -39,3 +44,5 @@ To use this project, follow these steps:
 2. Install dependencies.
 3. Start the server.
 4. Open the application in your browser.
+
+./Docker contains the docker image I made to evaluate the submissions
