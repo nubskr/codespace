@@ -12,7 +12,7 @@ const app = express();
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
 	// standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
 	// legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
 })
@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
             io.to(targetSocket.id).emit('reply received', { signal: payload.signal, id: payload.userid});
         }
         else{
-            console.log('nigger doesnt exist');
+            console.log('cutie doesnt exist');
         }
     })
 
@@ -127,7 +127,7 @@ io.on('connection', (socket) => {
             targetSocket.emit('receive message', { msg: payload.msg });
         }
         else{
-            console.log('you messed something up nigger');
+            console.log('you messed something up cutie');
         }
     })
 

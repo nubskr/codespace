@@ -32,9 +32,15 @@ high-level architecture of the system.
 - **Docker API**: Used Docker API to spawn containers on the fly for code evaluation.
 - **Collaborative Features**: Utilized WebSockets (Socket.IO) for real-time collaboration.
 - **Problem Packages**: Stored in MongoDB for easy management.
+    - Includes:
+        - Problem Statements (Interpreted)
+        - Sample test data
+        - Main test data (to evaluate submissions)
+        - Expected outputs for the main tests
 - **Math Rendering**: Used KaTeX for rendering math equations.
 - **Rate Limiting**: Added to each compilation API call to prevent abuse.
 
+Only supports c++ as of now
 
 ## Usage
 
@@ -44,5 +50,5 @@ To use this project, follow these steps:
 2. Install dependencies.
 3. Start the server.
 4. Open the application in your browser.
-
+(Note: You need docker installed in the backend to use the submission functionality)
 ./Docker contains the docker image I made to evaluate the submissions
