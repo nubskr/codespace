@@ -5,14 +5,12 @@ int main(){
  int t;
  cin >> t;
  while(t--){
-   int a,b;
-   cin >> a >> b;
-   cout << a+b << endl;
-   while(1){
-     
+   int n;
+   cin >> n;
+   int ans = 0;
+   while(n--){
+     int a; cin >> a; ans += a;
    }
-   // if(t!=0){
-   //   cout << endl;
-   // }
+   cout << ans/0 << endl;
  }
 }
