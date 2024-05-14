@@ -17,6 +17,7 @@ export default function TextBox({socketRef,currentProbId}) {
     const [inputvalue, setInputvalue] = useState('');
     const [outputvalue, setOutputvalue] = useState('');
     const [verdict, setVerdict] = useState('');
+    const [color, setColor] = useState('black');
 
     function SocketEmit(channel,msg){
         if(socketRef.current){
@@ -31,6 +32,19 @@ export default function TextBox({socketRef,currentProbId}) {
             });   
         }
     },[socketRef.current]);
+
+
+    useEffect(() => {
+        console.log(`outputvalue changed to ${outputvalue}`);
+        outputvalue.trim();
+        if(outputvalue==="Submitting.." || outputvalue===""){
+            setColor('black');
+        }
+        else{
+            setColor(outputvalue === "Accepted" ? 'green' : 'red');
+        }
+      }, [outputvalue]);
+
 
     const Handlechange = React.useCallback((val, viewUpdate) => {
         setTextvalue(val);
@@ -99,9 +113,10 @@ export default function TextBox({socketRef,currentProbId}) {
                     placeholder="Enter input here"
                 ></textarea>
             </div>
-            <div className="output-area" style={{padding: '1px',width: '100%', height: '6vh',border: '2px solid black' }}>
+            <div className="output-area" style={{ padding: '1px', width: '100%', height: '6vh', border: '2px solid black' , color: color}}>
   Output: {outputvalue}
 </div>
+<div> Output Value: {outputvalue}</div>
         </div>
         <div>
             <button onClick={Handlecompile}>Compile</button>

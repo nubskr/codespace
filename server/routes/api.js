@@ -130,12 +130,12 @@ router.post('/get-test-package', async (req,res) => {
   // const data = await tests_model.find({id: id});
   // res.json(data);
   try{
-    var data = await redisClient.get("test-package");
+    var data = await redisClient.get(id);
     if(data==null){
       console.log("We don't have that cached sire");
       data = await tests_model.find({id: id});
       // cache the problems now
-      redisClient.setEx("test-package",JSON.stringify(data));
+      redisClient.set(id,JSON.stringify(data));
       res.json(data);
     }
     else{
