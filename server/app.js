@@ -164,6 +164,10 @@ app.use((req, res, next) => {
     });
   });
 
+app.get('/',(req,res) => {
+    res.send("hewwo fren");
+})
+
 server.listen(6909, () => {
     console.log(`server listening`);
 })
