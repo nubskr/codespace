@@ -3,10 +3,13 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const router = express.Router();
 const url = process.env.MONGODB_URI;
-
+const { exec } = require('child_process')
 const redis = require('redis');
+const { stderr } = require('process');
 const redisClient = redis.createClient();
 redisClient.connect();
+
+const expire_time = 3600;
 
 redisClient.on('connect', async function() {
   console.log('Connected to Redis');
@@ -123,6 +126,34 @@ router.get('/problem-list',async (req,res) => {
   }
 })
 
+router.get('/parse_problem/:param',async (req,res) => {
+  console.log("who called me");
+  const req_problem = req.params.param;
+  var data = await redisClient.get(req_problem);
+  console.log(req_problem);
+  if(data!==null){
+    res.json(data);
+  }
+  else{
+    console.log("running");
+    exec(`python routes/scraper.py ${req_problem}`,(error,stdout,stderr) => {
+      if(error){
+        console.error(`exec error: ${error}`);
+        res.status(500).send(`Error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        res.status(500).send(`Error: ${stderr}`);
+        return;
+    }
+      redisClient.setEx(req_problem,expire_time,JSON.stringify(stdout));
+      res.status(200).json(stdout);
+    })
+  }
+
+})
+
 router.post('/get-test-package', async (req,res) => {
   const {id} = req.body;
   // // console.log("requested test id is " + id);
@@ -135,7 +166,7 @@ router.post('/get-test-package', async (req,res) => {
       console.log("We don't have that cached sire");
       data = await tests_model.find({id: id});
       // cache the problems now
-      redisClient.set(id,JSON.stringify(data));
+      redisClient.setEx(id,expire_time,JSON.stringify(data));
       res.json(data);
     }
     else{
