@@ -3,7 +3,8 @@ import requests
 import json
 import sys
 
-url = 'https://codeforces.com/contest/1826/problem/A'
+# url = 'https://codeforces.com/contest/1826/problem/A'
+url = 'https://codeforces.com/contest/1826/problem/B'
 
 param = sys.argv[1]
 
@@ -14,6 +15,8 @@ soup = BeautifulSoup(response.text, 'html.parser')
 
 # everything that matters is in this class
 problem_statements = soup.find_all(class_='problem-statement')
+
+# print(problem_statements)
 
 for statement in problem_statements:
     # title
@@ -27,15 +30,20 @@ for statement in problem_statements:
     
     # input format
     input_spec = statement.find(class_='input-specification').text.strip().replace('Input', '')
-    print("Input Specification:", input_spec)
+    # print("Input Specification:", input_spec)
     
     # output format
     output_spec = statement.find(class_='output-specification').text.strip().replace('Output', '')
-    print("Output Specification:", output_spec)
+    # print("Output Specification:", output_spec)
     
+    problem = ""
+    for i in statement.find_all('p'):
+        problem += i.text.strip()
+        problem += '\n'
+        
     # sample inputs
     examples = statement.find(class_='sample-tests')
-    input_tests = examples.find_all(class_='test-example-line')
+    input_tests = examples.find_all(class_='teswt-example-line')
 
     inputs = ""
     for i in input_tests: 
@@ -67,10 +75,11 @@ for statement in problem_statements:
         "memory limit": memory_limit,
         "input format": input_spec,
         "output format": output_spec,
-        "sample input": inputs,
+        "statement": problem,
+        "sample input": inputs,   
         "sample outputs": outputs,
         "note": note_text
     }
 
-    json_data = json.dumps(data, indent=4)
+    json_data = json.dumps(data, indent=0)
     print(json_data)

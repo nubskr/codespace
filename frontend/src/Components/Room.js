@@ -186,7 +186,7 @@ export default function Room() {
             <Main_LHS socketRef={socketRef} currentProbId={currentProbId} setCurrentProb={setCurrentProb}/>
         </div>
         <div className="RHS-container">
-            <TextBox socketRef={socketRef} currentProbId={currentProbId}/>
+            <TextBox socketRef={socketRef} currentProbId={currentProbId}/>/
         </div>
         <MiniDrawer toggleMic={toggleMic} members_in_room={members_in_room}/>
         {/* <AudioRecorder socket={socket} username={username} roomid={roomid}/> */}

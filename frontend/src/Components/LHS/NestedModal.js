@@ -6,6 +6,7 @@ import LateXparser from './LateXparser'
 import axios from 'axios';
 import {v4 as uuidv4} from 'uuid';
 import ProblemList from './ProblemList';
+import CFparser from './CFparser';
 
 const style = {
   position: 'absolute',
@@ -70,6 +71,8 @@ function ChildModal({socketRef, text,setText,input,setInput}) {
       >
         <Box sx={{ ...style, width: 1500, height: 700 }}>
           <h2 id="child-modal-title">Create new problem</h2>
+          {/* <CFparser /> */}
+          <CFparser setStatement={setStatement} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput}/>
           <p>
             Name your problem here
           </p>
@@ -141,9 +144,7 @@ export default function NestedModal({socketRef, setCurrentProb,setSampleOutput,s
       >
         <Box sx={{ ...style, width: 400 }}>
           <h2 id="parent-modal-title">Available Problems</h2>
-          {/* <p id="parent-modal-description">
-            Problems
-          </p> */}
+
           <ProblemList key="123" socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} setInput={setInput}/>
           <ChildModal socketRef={socketRef} text={text  } setText={setText} input={input} setInput={setInput} handleClose={handleClose}/>
         </Box>

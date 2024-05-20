@@ -132,11 +132,12 @@ router.get('/parse_problem/:param',async (req,res) => {
   var data = await redisClient.get(req_problem);
   console.log(req_problem);
   if(data!==null){
-    res.json(data);
+    // res.json(JSON.stringify(data));
+    res.json(JSON.parse(data));
   }
   else{
     console.log("running");
-    exec(`python routes/scraper.py ${req_problem}`,(error,stdout,stderr) => {
+    exec(`python routes/scraper.py 123`,(error,stdout,stderr) => {
       if(error){
         console.error(`exec error: ${error}`);
         res.status(500).send(`Error: ${error.message}`);
@@ -147,8 +148,12 @@ router.get('/parse_problem/:param',async (req,res) => {
         res.status(500).send(`Error: ${stderr}`);
         return;
     }
-      redisClient.setEx(req_problem,expire_time,JSON.stringify(stdout));
-      res.status(200).json(stdout);
+    console.log('here'); 
+    console.log(stdout);
+      redisClient.setEx(req_problem,expire_time,JSON.stringify(JSON.parse(stdout)));
+      
+      // res.status(200).json(JSON.stringify(stdout));
+      res.send(JSON.parse(stdout));
     })
   }
 
