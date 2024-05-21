@@ -43,7 +43,7 @@ for statement in problem_statements:
         
     # sample inputs
     examples = statement.find(class_='sample-tests')
-    input_tests = examples.find_all(class_='teswt-example-line')
+    input_tests = examples.find_all(class_='test-example-line')
 
     inputs = ""
     for i in input_tests: 
@@ -71,13 +71,13 @@ for statement in problem_statements:
     
     data = {
         "title": title,
-        "time limit": time_limit,
-        "memory limit": memory_limit,
-        "input format": input_spec,
-        "output format": output_spec,
+        "time_limit": time_limit,
+        "memory_limit": memory_limit,
+        "input_format": input_spec,
+        "output_format": output_spec,
         "statement": problem,
-        "sample input": inputs,   
-        "sample outputs": outputs,
+        "sample_input": inputs,   
+        "sample_outputs": outputs,
         "note": note_text
     }
 

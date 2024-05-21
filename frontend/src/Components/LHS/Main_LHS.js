@@ -6,6 +6,7 @@ import NestedModal from './NestedModal';
 import axios from 'axios';
 import CopyLinkButton from './ShareRoom';
 import { useParams } from 'react-router-dom';
+import Samples from './Samples';
 
 const api = 'http://localhost:6909/api/problem-list';
 
@@ -115,7 +116,7 @@ function go(problem_package){
       <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
       {/* <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/> */}
       {/* <CopyLinkButton link={sharedlink} /> */}
-
+      {text!=="" && <Samples sampleInput={sampleInput} sampleOutput={sampleOutput}/>}
       <NestedModal socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} text={text} setText={setText} input={input} setInput = {setInput} />
 
     </div>

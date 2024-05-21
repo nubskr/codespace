@@ -12,6 +12,12 @@ function App({text,setText,input,setInput,handleClose}) {
     setText(inputval);
   }, [inputval]);
 
+  useEffect(() => {
+    setTmpText(renderTextWithKaTeX(input));
+    setText(input);
+  }, [input]);
+
+
   function renderTextWithKaTeX(text) {
     const kaTeXPattern = /\$\$([^$]+)\$\$/g;
     const imagePattern = /\${img:([^}]+)}/g; // Updated image pattern

@@ -132,7 +132,6 @@ router.get('/parse_problem/:param',async (req,res) => {
   var data = await redisClient.get(req_problem);
   console.log(req_problem);
   if(data!==null){
-    // res.json(JSON.stringify(data));
     res.json(JSON.parse(data));
   }
   else{

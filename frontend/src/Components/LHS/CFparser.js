@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput}) => {
+const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,setInput}) => {
   const [param, setparam] = useState('');
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -54,12 +54,14 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput}) 
 }
 
   async function go(stuff){
+    // print
     const new_statement = await sanitize(stuff.statement);
-    console.log(new_statement);
+    console.log(stuff.sample_input);
     setProblemName(stuff.title); 
     setStatement(new_statement); 
+    setInput(new_statement);
     setSampleInput(stuff.sample_input);
-    setSampleOutput(stuff.sample_output); 
+    setSampleOutput(stuff.sample_outputs); 
   }
 
   const handleKeyPress = async (e) => {
