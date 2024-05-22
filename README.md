@@ -1,56 +1,58 @@
-# Codespaces
+# 🎉 Codespaces
 
-I was curious about how Codeforces worked, so I made my own version :)
+Hey there! I was curious about how Codeforces worked, so I decided to create my own version! Welcome to **Codespaces**—your friendly problem solving playground! 🧑‍💻✨
 
-## Features
+## ✨ Features
 
-- **Code Evaluation**: Evaluate code submissions.
-- **Collaborative Coding**: Support for multiple users to code together.
-- **Voice Chat**: Integrated voice chat for collaboration.
-- **Problem Packages**: Store and manage problem packages.
-- **Math and Image Rendering**: Support for rendering math equations and images (or any media) in problem statements.
-- **Caching**: Added caching to problem statements and problem packages using Redis.
+- **🔍 Codeforces Problem Scraping**: Users can create their own problem or just enter a Codeforces problem link and watch the magic happen! The problem statement and test cases are automatically parsed and saved to Codespaces. 🌟
+- **✏️ Create Your Own Problems**: Feeling creative? You can also create and manage your own coding problems! 🎨
+- **🚀 Code Evaluation**: Evaluate code submissions in a snap!
+- **👩‍💻👨‍💻 Collaborative Coding**: Team up with your friends and solve problems together in real-time with up to 10 users. 
+- **🎤 Group Voice Chat**: Integrated group voice chat for seamless collaboration using WebRTC. Chat away while you code! 🗣️🎧
+- **📦 Problem Packages**: Easily store and manage problem packages.
+- **🧮🖼️ Math and Image Rendering**: Supports rendering math equations and images (or any media) in problem statements.
+- **⚡ Caching**: Lightning-fast caching for problem statements and packages using Redis.
 
-## Demo
+## 🎬 Demo
 
-You can find the demo [here](https://www.youtube.com/watch?v=9eF_-2vc_9s).
+Check out the demo [here](https://www.youtube.com/watch?v=9eF_-2vc_9s). 🍿
 
-## System Architecture
+## 🏗️ System Architecture
 
 ![Architecture](./architecture.jpg)
 
-This is a high-level architecture of the system.
+Here's a high-level architecture of our cute little system. 🥰
 
-## Submission Handling
+## 📝 Submission Handling
 
-- Every new submission triggers the launch of a new Docker container (Alpine Linux).
+- Every new submission triggers a shiny new Docker container (Alpine Linux). 🐳
 - The container:
   - Compiles and runs the program.
   - Pulls the test data from the database if it’s not cached.
   - Compares the program output to the expected output.
-  - Sends a verdict.
-- There is a 2-second time limit for each program; if it doesn't complete output by then, it gets terminated, and a TLE (Time Limit Exceeded) verdict is sent.
+  - Sends a verdict (yay or nay!).
+- Programs have a 2-second time limit; if they don't finish in time, they get a TLE (Time Limit Exceeded) verdict. ⏰
 
-## Implementation Details
+## 🔧 Implementation Details
 
-- **Voice Chat**: Implemented using WebRTC to reduce load on the server.
-- **Docker API**: Used Docker API to spawn containers on the fly for code evaluation.
-- **Collaborative Features**: Utilized WebSockets (Socket.IO) for real-time collaboration.
-- **Problem Packages**: Stored in MongoDB for easy management.
+- **🎤 Group Voice Chat**: Implemented using WebRTC to reduce server load. Chat with your whole group while you code!
+- **🐳 Docker API**: Used to spawn containers on the fly for code evaluation.
+- **🤝 Collaborative Features**: Utilized WebSockets (Socket.IO) for real-time collaboration.
+- **📦 Problem Packages**: Stored in MongoDB for easy management.
   - Includes:
     - Problem Statements (Interpreted)
     - Sample test data
-    - Main test data (to evaluate submissions)
+    - Main test data (for evaluating submissions)
     - Expected outputs for the main tests
-- **Redis Caching**: Cached problem packages and test data to limit hits to the database.
-- **Math Rendering**: Used KaTeX for rendering math equations.
-- **Rate Limiting**: Added to each compilation API call to prevent abuse.
+- **⚡ Redis Caching**: Cached problem packages and test data to limit database hits.
+- **🧮 Math Rendering**: Used KaTeX for rendering math equations.
+- **🚫 Rate Limiting**: Added to each compilation API call to prevent abuse.
 
-## Supported Languages
+## 🌐 Supported Languages
 
-- Only supports C++ as of now.
+- Only supports C++ for now. 🖋️
 
-## Usage
+## 🚀 Usage
 
 To use this project, follow these steps:
 
