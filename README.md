@@ -5,12 +5,19 @@ Hey there! I was curious about how Codeforces worked, so I decided to create my 
 ## ✨ Features
 
 - **🔍 Codeforces Problem Scraping**: Users can create their own problem or just enter a Codeforces problem link and watch the magic happen! The problem statement and test cases are automatically parsed and saved to Codespaces. 🌟
+
 - **✏️ Create Your Own Problems**: Feeling creative? You can also create and manage your own coding problems! 🎨
+
 - **🚀 Code Evaluation**: Evaluate code submissions in a snap!
+
 - **👩‍💻👨‍💻 Collaborative Coding**: Team up with your friends and solve problems together in real-time with up to 10 users. 
+
 - **🎤 Group Voice Chat**: Integrated group voice chat for seamless collaboration using WebRTC. Chat away while you code! 🗣️🎧
+
 - **📦 Problem Packages**: Easily store and manage problem packages.
+
 - **🧮🖼️ Math and Image Rendering**: Supports rendering math equations and images (or any media) in problem statements.
+
 - **⚡ Caching**: Lightning-fast caching for problem statements and packages using Redis.
 
 ## 🎬 Demo
