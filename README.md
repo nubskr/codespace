@@ -19,7 +19,7 @@ Check out the demo [here](https://www.youtube.com/watch?v=9eF_-2vc_9s). 🍿
 
 ## 🏗️ System Architecture
 
-![Architecture](./architecture.jpg)
+![Architecture](./architecture.png)
 
 Here's a high-level architecture of our cute little system. 🥰
 
