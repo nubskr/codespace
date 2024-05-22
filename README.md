@@ -38,6 +38,7 @@ Here's a high-level architecture of our cute little system. 🥰
 - **🎤 Group Voice Chat**: Implemented using WebRTC to reduce server load. Chat with your whole group while you code!
 - **🐳 Docker API**: Used to spawn containers on the fly for code evaluation.
 - **🤝 Collaborative Features**: Utilized WebSockets (Socket.IO) for real-time collaboration.
+- **⛏ Web scraping**: Used BeautifulSoup with a custom scraper to scrape problems from codeforces.
 - **📦 Problem Packages**: Stored in MongoDB for easy management.
   - Includes:
     - Problem Statements (Interpreted)
