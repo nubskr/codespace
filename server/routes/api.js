@@ -98,17 +98,18 @@ router.get('/', (req, res) => {
 router.post('/new', (req,res) => {
   try{
     redisClient.flushAll();
+    newProblem(req.body);
   }
   catch(error){
     console.error(error);
   }
-  newProblem(req.body);
+  
 })
 
 router.get('/problem-list',async (req,res) => {
   try{
     var data = await redisClient.get("problem-list");
-    if(data==null){
+    if(data===null){
       console.log("We don't have that cached sire");
       data = await getProblemList();
       // cache the problems now
@@ -123,38 +124,55 @@ router.get('/problem-list',async (req,res) => {
   }
   catch(error){
     console.error(error);
+    res.status(500).send("sowwie,error fetching problems");
   }
 })
 
 router.get('/parse_problem/:param',async (req,res) => {
-  console.log("who called me");
-  const req_problem = req.params.param;
+  // console.log("who called me");
+  
+  const req_problem = decodeURIComponent(req.params.param);
   var data = await redisClient.get(req_problem);
   console.log(req_problem);
   if(data!==null){
     res.json(JSON.parse(data));
   }
   else{
-    console.log("running");
-    exec(`python routes/scraper.py 123`,(error,stdout,stderr) => {
-      if(error){
-        console.error(`exec error: ${error}`);
-        res.status(500).send(`Error: ${error.message}`);
-        return;
+    try{
+      console.log("running");
+      exec(`python routes/scraper.py ${req_problem}`,(error,stdout,stderr) => {
+        if(error){
+          console.error(`exec error: ${error}`);
+          res.status(500).send(`Error: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`stderr: ${stderr}`);
+          res.status(500).send(`Error: ${stderr}`);
+          return;
       }
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-        res.status(500).send(`Error: ${stderr}`);
-        return;
+      console.log('here'); 
+      console.log(stdout);
+      try{
+        redisClient.setEx(req_problem,expire_time,JSON.stringify(JSON.parse(stdout)));
+        
+        // res.status(200).json(JSON.stringify(stdout));
+        console.log(data);
+        res.send(JSON.parse(stdout));
+      }
+      catch(err){
+        res.json({"error": "Invalid link"});
+
+        console.error(err);
+      }
+        
+      })
     }
-    console.log('here'); 
-    console.log(stdout);
-      redisClient.setEx(req_problem,expire_time,JSON.stringify(JSON.parse(stdout)));
-      
-      // res.status(200).json(JSON.stringify(stdout));
-      res.send(JSON.parse(stdout));
-    })
-  }
+    catch(err){
+      console.error(err);
+    }
+}
+
 
 })
 
@@ -166,7 +184,7 @@ router.post('/get-test-package', async (req,res) => {
   // res.json(data);
   try{
     var data = await redisClient.get(id);
-    if(data==null){
+    if(data===null){
       console.log("We don't have that cached sire");
       data = await tests_model.find({id: id});
       // cache the problems now
@@ -181,6 +199,7 @@ router.post('/get-test-package', async (req,res) => {
   }
   catch(error){
     console.error(error);
+    res.send("dead");
   }
 })
 

@@ -1,76 +1,65 @@
 const express = require('express');
 const Docker = require('dockerode');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 const router = express.Router();
 const docker = new Docker();
-  
-router.post('/', (req,res) => {
-  const cppfilepath = path.join(__dirname,'test1','a.cpp');
-  const inputfilepath = path.join(__dirname,'test1','input.txt');
-  const outputfilepath = path.join(__dirname,'test1','output.txt');
-  const {code,input} = req.body;
-console.log(code);
-console.log(input);
+
+router.post('/', async (req, res) => {
+  const cppfilepath = path.join(__dirname, 'test1', 'a.cpp');
+  const inputfilepath = path.join(__dirname, 'test1', 'input.txt');
+  const outputfilepath = path.join(__dirname, 'test1', 'output.txt');
+  const { code, input } = req.body;
+
+  if (!code) {
+    return res.status(400).send('Code is required.');
+  }
+
   const containerOptions = {
     Image: 'nubskr/compiler:UwU',
     Cmd: ['./doshit.sh'],
     Binds: [
-      // Define volume bindings in the format: hostPath:containerPath
       '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
     ],
   };
-  function changeFile(path,data){
-    fs.writeFile(path, data, 'utf8', (err) => {
-      if (err) {
-        console.error('Error writing the file:', err);
-        return;
-      }
-      console.log('File content has been updated.');
-    });
+
+  async function changeFile(filePath, data) {
+    try {
+      await fs.writeFile(filePath, data, 'utf8');
+      console.log(`File content at ${filePath} has been updated.`);
+    } catch (err) {
+      console.error('Error writing the file:', err);
+      throw err;
+    }
   }
 
-  async function go(){
-    // change the input and cpp file to the req
-    await changeFile(cppfilepath,code);
-    await changeFile(inputfilepath,input);
-    await docker.createContainer(containerOptions, (err, container) => {
-      if (err) {
-        console.error('Error creating container:', err);
-        return;
-      }
-    
-      container.start((err, data) => {
-        if (err) {
-          console.error('Error starting container:', err);
-          return;
-        }
-        console.log('Container started successfully:', data);
-    
-        // You can now interact with the running container here
-    
-        container.stop((err) => {
-          if (err) {
-            console.error('Error stopping container:', err);
-          } 
-          else {
-            fs.readFile(outputfilepath,'utf8', (err,data) => {
-              if(err){
-                res.send('shit happened bruh');
-                console.error(err);
-              }
-              else{
-                // sends the output.txt data
-                res.send(data);
-              }
-            })
-            console.log('Container stopped');
-          }
-        });
-      });
-    });
+  async function runContainer() {
+    try {
+      const container = await docker.createContainer(containerOptions);
+
+      await container.start();
+      console.log('Container started successfully.');
+
+      // You can add further interactions with the container here if necessary
+
+      await container.stop();
+      console.log('Container stopped.');
+
+      const outputData = await fs.readFile(outputfilepath, 'utf8');
+      res.send(outputData);
+    } catch (err) {
+      console.error('Error during Docker container operation:', err);
+      res.status(500).send('Internal Server Error');
+    }
   }
-  go();
-})
+
+  try {
+    await changeFile(cppfilepath, code);
+    await changeFile(inputfilepath, input);
+    await runContainer();
+  } catch (err) {
+    res.status(500).send('An error occurred while processing your request.');
+  }
+});
 
 module.exports = router;
