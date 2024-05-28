@@ -27,10 +27,10 @@ const io = new Server(server); // this shit creates a separate websocket server 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.use('/test',test)
-app.use('/submit',submit)
 app.use('/api',limiter);
 app.use('/api',api1)
+app.use('/test',test)
+app.use('/submit',submit)
 
 app.get('/', (req, res) => {
     res.send('omg hewwo fren!!');

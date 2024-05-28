@@ -39,7 +39,7 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
             }
         }
         
-        if (char==='.' && count>10) {
+        if ((char==='.' || char===',') && count>5) {
             res += "\n";
             count = 0;
         }
@@ -55,13 +55,20 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
 
   async function go(stuff){
     // print
-    const new_statement = await sanitize(stuff.statement);
-    console.log(stuff.sample_input);
-    setProblemName(stuff.title); 
-    setStatement(new_statement); 
-    setInput(new_statement);
-    setSampleInput(stuff.sample_input);
-    setSampleOutput(stuff.sample_outputs); 
+    if(stuff.error){
+      console.log("fcuk");
+      setError(stuff.error);
+    }
+    else{
+      const new_statement = await sanitize(stuff.statement);
+      console.log(stuff.sample_input);
+      setProblemName(stuff.title); 
+      setStatement(new_statement); 
+      setInput(new_statement);
+      setSampleInput(stuff.sample_input);
+      setSampleOutput(stuff.sample_outputs);
+    }
+ 
   }
 
   const handleKeyPress = async (e) => {
@@ -69,7 +76,9 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`http://localhost:6909/api/parse_problem/${param}`);
+        const encodedURL = encodeURIComponent(param);
+        // const requestURL = `http://localhost:6909/api/parse_problem/${encodedURL}`;
+        const response = await axios.get(`http://localhost:6909/api/parse_problem/${encodedURL}`);
         setData(response.data);
         go(response.data); 
       } catch (err) {   
@@ -91,7 +100,7 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
       />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {/* {data && <pre>{JSON.stringify(data, null, 2)}</pre>} */}
     </div>
   );
 };
