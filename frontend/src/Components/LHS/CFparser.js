@@ -39,7 +39,7 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
             }
         }
         
-        if ((char==='.' || char===',') && count>5) {
+        if ((char==='.') && count>5) {
             res += "\n";
             count = 0;
         }
@@ -60,9 +60,18 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
       setError(stuff.error);
     }
     else{
-      const new_statement = await sanitize(stuff.statement);
+      var new_statement = `<h2><strong>${stuff.title}</strong></h2>`
+      new_statement += await sanitize(stuff.statement);
       console.log(stuff.sample_input);
       setProblemName(stuff.title); 
+      // new_statement += " \n \n  $$\nInput format$$ \n \n "
+      new_statement += "<h3><strong>Input format</strong></h3>"
+      // new_statement += stuff.input_format;
+      new_statement += await sanitize(stuff.input_format)
+      // new_statement += " \n \n  $$\n Output format$$ \n \n "
+      new_statement += "<h3><strong>Output format</strong></h3>"
+      new_statement += await sanitize(stuff.output_format);
+      new_statement += '\n ';
       setStatement(new_statement); 
       setInput(new_statement);
       setSampleInput(stuff.sample_input);
@@ -77,7 +86,6 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
       setError(null);
       try {
         const encodedURL = encodeURIComponent(param);
-        // const requestURL = `http://localhost:6909/api/parse_problem/${encodedURL}`;
         const response = await axios.get(`http://localhost:6909/api/parse_problem/${encodedURL}`);
         setData(response.data);
         go(response.data); 
@@ -96,7 +104,7 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
         value={param} 
         onChange={handleInputChange} 
         onKeyPress={handleKeyPress} 
-        placeholder="Enter parameters" 
+        placeholder="codeforces link" 
       />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}

@@ -50,3 +50,15 @@ button {
   display: flex;
   flex-direction:row;
 }
+
+.Samples {
+  /* color: red; */
+  display: flex;
+  flex-direction: row;
+  /* margin: 100px; */
+}
+
+.Sample-input {
+  margin-right: 50px;
+  border-color: black;
+}

@@ -20,6 +20,7 @@
     "react-latex": "^2.0.0",
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
+    "react-split": "^2.0.14",
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.7.2",
     "styled-components": "^6.1.0",

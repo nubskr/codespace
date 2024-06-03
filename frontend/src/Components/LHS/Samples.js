@@ -3,24 +3,23 @@ import '../../Samples.css'
 const Samples = ({sampleInput,sampleOutput}) => {
 
 return (
-    <div className="Samples">
+    <div>
       <table>
         <thead>
           <tr>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <p>
+          <div className='Samples'>
+            <div className='Sample-input'>
               <th>Input</th> 
               <pre>{sampleInput}</pre>
-            </p>
-
-            <p>
+            </div>
+            <div>
               <th>Output</th>
               <pre>{sampleOutput}</pre>
-            </p>
-          </tr>
+            </div>
+          </div>
         </tbody>
       </table>
     </div>

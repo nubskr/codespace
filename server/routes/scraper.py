@@ -37,10 +37,13 @@ for statement in problem_statements:
     # print("Output Specification:", output_spec)
     
     problem = ""
-    for i in statement.find_all('p'):
-        problem += i.text.strip()
-        problem += '\n'
-        
+    for child in statement.children:
+        if child.name == 'div' and ('input-specification' in child.get('class', [])):
+            break
+
+        if child.name == 'div' and ('header' not in child.get('class', [])):
+            problem += child.text.strip()
+
     # sample inputs
     examples = statement.find(class_='sample-tests')
     input_tests = examples.find_all(class_='test-example-line')
@@ -57,7 +60,7 @@ for statement in problem_statements:
 
     # print(output_tests.text.strip())
     for i in output_tests:  
-        output_example_lines = i.text.strip()
+        output_example_lines = i.text.strip().replace('Output\n', '')
         outputs += output_example_lines
         outputs += '\n'
     

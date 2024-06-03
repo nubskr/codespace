@@ -24,7 +24,7 @@ export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
 
   function renderTextWithKaTeX(text) {
     const kaTeXPattern = /\$\$([^$]+)\$\$/g; // $$*insert math here*$$
-    const imagePattern = /\${img:([^}]+)}/g; // ${img:*insert link here*}
+    const imagePattern = /\${img:([^}]+)}/g; // ${img:*image_link*}
 
     const renderedText = text
         .replace(kaTeXPattern, (match, content) => {
@@ -113,11 +113,12 @@ function go(problem_package){
 
   return (
     <div>
-      <div style={{ fontSize: '32px', fontWeight: 'bold' , marginBottom: '20  px'}}>{problemName}</div>
+      {/* <div style={{ fontSize: '32px', fontWeight: 'bold' , marginBottom: '20  px'}}>{problemName}</div> */}
 
       <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
       {/* <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/> */}
       {/* <CopyLinkButton link={sharedlink} /> */}
+
       {text!=="" && <Samples sampleInput={sampleInput} sampleOutput={sampleOutput}/>}
       <NestedModal socketRef={socketRef} setCurrentProb={setCurrentProb} setProblemName={setProblemName} setSampleInput={setSampleInput} setSampleOutput={setSampleOutput} text={text} setText={setText} input={input} setInput = {setInput} />
 
