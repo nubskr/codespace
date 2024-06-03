@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { useState , useRef } from 'react';
 import MiniDrawer from './SideDrawer';
-
+import Split from 'react-split';
 import Main_LHS from './LHS/Main_LHS';
 import io from 'socket.io-client';  
 import SimplePeer from 'simple-peer';
@@ -180,24 +180,37 @@ export default function Room() {
         return peer;
       }
 
-    return (
-    <div className='main'>
-        <div className="LHS-container">
-            <Main_LHS socketRef={socketRef} currentProbId={currentProbId} setCurrentProb={setCurrentProb}/>
+      return (
+        <div className='main'>
+            <Split
+                sizes={[20, 80]}
+                minSize={200}
+                maxSize={1000}
+                direction="horizontal"
+                gutterSize={10}
+                gutterAlign="center"
+                className="split"
+                gutter={(index, direction) => {
+                    const gutter = document.createElement('div');
+                    gutter.className = `gutter gutter-${direction}`;
+                    return gutter;
+                }}
+            >
+                <div className="LHS-container">
+                    <Main_LHS socketRef={socketRef} currentProbId={currentProbId} setCurrentProb={setCurrentProb} />
+                </div>
+                <div className="RHS-container">
+                    <TextBox socketRef={socketRef} currentProbId={currentProbId} />
+                </div>
+            </Split>
+            <MiniDrawer toggleMic={toggleMic} members_in_room={members_in_room} />
+            {/* <AudioRecorder socket={socket} username={username} roomid={roomid}/> */}
+            <Container>
+                <StyledVideo muted ref={userVideo} autoPlay playsInline />
+                {peers.map((peer, index) => (
+                    <Video key={index} peer={peer} />
+                ))}
+            </Container>
         </div>
-        <div className="RHS-container">
-            <TextBox socketRef={socketRef} currentProbId={currentProbId}/>/
-        </div>
-        <MiniDrawer toggleMic={toggleMic} members_in_room={members_in_room}/>
-        {/* <AudioRecorder socket={socket} username={username} roomid={roomid}/> */}
-        <Container>
-      <StyledVideo muted ref={userVideo} autoPlay playsInline />
-      {peers.map((peer, index) => {
-          return (
-              <Video key={index} peer={peer} />
-          );
-      })}
-    </Container>
-    </div>
-    )
-}
+    );
+};

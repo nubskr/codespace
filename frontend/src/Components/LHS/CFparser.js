@@ -56,20 +56,20 @@ const CFparser = ({setStatement,setProblemName,setSampleInput,setSampleOutput,se
   async function go(stuff){
     // print
     if(stuff.error){
-      console.log("fcuk");
+      // console.log("fcuk");
       setError(stuff.error);
     }
     else{
-      var new_statement = `<h2><strong>${stuff.title}</strong></h2>`
+      var new_statement = `<h2><strong>${stuff.title}</strong></h2>\n`
       new_statement += await sanitize(stuff.statement);
       console.log(stuff.sample_input);
       setProblemName(stuff.title); 
       // new_statement += " \n \n  $$\nInput format$$ \n \n "
-      new_statement += "<h3><strong>Input format</strong></h3>"
+      new_statement += "<h3><strong>Input format</strong></h3>\n"
       // new_statement += stuff.input_format;
       new_statement += await sanitize(stuff.input_format)
       // new_statement += " \n \n  $$\n Output format$$ \n \n "
-      new_statement += "<h3><strong>Output format</strong></h3>"
+      new_statement += "<h3><strong>Output format</strong></h3>\n"
       new_statement += await sanitize(stuff.output_format);
       new_statement += '\n ';
       setStatement(new_statement); 

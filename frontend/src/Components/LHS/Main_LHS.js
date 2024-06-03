@@ -115,7 +115,7 @@ function go(problem_package){
     <div>
       {/* <div style={{ fontSize: '32px', fontWeight: 'bold' , marginBottom: '20  px'}}>{problemName}</div> */}
 
-      <p><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></p>
+      <div className='problem-statement'><span id="inline-math" dangerouslySetInnerHTML={{ __html: text }} style={{ fontSize: '18px' }}></span></div>
       {/* <ProblemInputModal text={text} setText={setText} input={input} setInput={setInput}/> */}
       {/* <CopyLinkButton link={sharedlink} /> */}
 

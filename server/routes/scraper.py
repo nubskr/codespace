@@ -10,13 +10,12 @@ url = sys.argv[1]
 
 response = requests.get(url)
 
-# setup the parser for html
 soup = BeautifulSoup(response.text, 'html.parser')
 
 # everything that matters is in this class
 problem_statements = soup.find_all(class_='problem-statement')
 
-# print(problem_statements)
+#print(problem_statements)
 
 for statement in problem_statements:
     # title
@@ -81,7 +80,7 @@ for statement in problem_statements:
         "statement": problem,
         "sample_input": inputs,   
         "sample_outputs": outputs,
-        "note": note_text
+        "note": notes
     }
 
     json_data = json.dumps(data, indent=0)

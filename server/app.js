@@ -24,8 +24,10 @@ app.use(cors());
 const server = createServer(app);
 const io = new Server(server); // this shit creates a separate websocket server whenever a connection opens
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+// app.use(bodyParser.json()); // for parsing application/json
+app.use(express.json({limit: '50mb'}));
+app.use(express.json({limit: '50mb' , extended: true}));
+// app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use('/api',limiter);
 app.use('/api',api1)

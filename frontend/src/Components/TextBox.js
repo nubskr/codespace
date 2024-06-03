@@ -36,12 +36,12 @@ export default function TextBox({socketRef,currentProbId}) {
 
     useEffect(() => {
         console.log(`outputvalue changed to ${outputvalue}`);
-        outputvalue.trim();
+        // outputvalue = outputvalue.trim();
         if(outputvalue==="Submitting.." || outputvalue===""){
             setColor('black');
         }
         else{
-            setColor(outputvalue === "Accepted" ? 'green' : 'red');
+            setColor(outputvalue.trim()==="Accepted" ? 'green' : 'red');
         }
       }, [outputvalue]);
 
@@ -101,7 +101,7 @@ export default function TextBox({socketRef,currentProbId}) {
     return (
     <div className="RHS">
         <div className="code-area">
-            <CodeMirror value={textvalue} height="86vh" onChange={Handlechange} extensions={[cpp()]} />
+            <CodeMirror value={textvalue} width='170vh' height="86vh" onChange={Handlechange} extensions={[cpp()]} />
         </div>
         <div className="input-output">
             <div className="input-area">
@@ -116,7 +116,7 @@ export default function TextBox({socketRef,currentProbId}) {
             <div className="output-area" style={{ padding: '1px', width: '100%', height: '6vh', border: '2px solid black' , color: color}}>
   Output: {outputvalue}
 </div>
-<div> Output Value: {outputvalue}</div>
+{/* <div> Output Value: {outputvalue}</div> */}
         </div>
         <div>
             <button onClick={Handlecompile}>Compile</button>
