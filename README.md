@@ -1,8 +1,8 @@
 # 🎉 Codespaces
 
-![aww](./misc/aww.png)
-
 Hey there! I was curious about how Codeforces worked, so I decided to create my own version! Welcome to **Codespaces**—your friendly problem solving playground! 🧑‍💻✨
+
+![aww](./misc/aww.png)
 
 ## ✨ Features
 
