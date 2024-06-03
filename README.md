@@ -1,5 +1,7 @@
 # 🎉 Codespaces
 
+![aww](./misc/aww.png)
+
 Hey there! I was curious about how Codeforces worked, so I decided to create my own version! Welcome to **Codespaces**—your friendly problem solving playground! 🧑‍💻✨
 
 ## ✨ Features
@@ -26,7 +28,7 @@ Check out the demo [here](https://www.youtube.com/watch?v=9eF_-2vc_9s). 🍿
 
 ## 🏗️ System Architecture
 
-![Architecture](./architecture.png)
+![Architecture](./misc/architecture.png)
 
 Here's a high-level architecture of our cute little system. 🥰
 
