@@ -1,20 +1,20 @@
 # 🎉 Codespaces
 
-Hey there! I was curious about how Codeforces worked, so I decided to create my own version! Welcome to **Codespaces**—your friendly problem solving playground! 🧑‍💻✨
+I was curious about how Codeforces worked, so  created my own version! Welcome to **Codespaces**—your social problem solving playground! 🧑‍💻✨
 
 ![aww](./misc/aww.png)
 
 ## ✨ Features
 
-- **🔍 Codeforces Problem Scraping**: Users can create their own problem or just enter a Codeforces problem link and watch the magic happen! The problem statement and test cases are automatically parsed and saved to Codespaces. 🌟
-
 - **✏️ Create Your Own Problems**: Feeling creative? You can also create and manage your own coding problems! 🎨
 
-- **🚀 Code Evaluation**: Evaluate code submissions in a snap!
+- **🔍 Codeforces Problem Scraping**: Users can just enter a Codeforces problem link and watch the magic happen! The problem statement and test cases are automatically parsed and shared across all the users int the room. 🌟
 
-- **👩‍💻👨‍💻 Collaborative Coding**: Team up with your friends and solve problems together in real-time with up to 10 users. 
+- **🚀 Code Evaluation**: Evaluate code submissions on the fly!
 
-- **🎤 Group Voice Chat**: Integrated group voice chat for seamless collaboration using WebRTC. Chat away while you code! 🗣️🎧
+- **👩👨‍💻 Collaborative Coding**: Team up with your friends and solve problems together in real-time with up to 10 users. 
+
+- **🎤 Group Voice Chat**: Integrated group voice chat for seamless collaboration using WebRTC. 
 
 - **📦 Problem Packages**: Easily store and manage problem packages.
 
@@ -22,9 +22,13 @@ Hey there! I was curious about how Codeforces worked, so I decided to create my 
 
 - **⚡ Caching**: Lightning-fast caching for problem statements and packages using Redis.
 
+Can be used to host contests completely locally(for the most part)
+
 ## 🎬 Demo
 
-Check out the demo [here](https://www.youtube.com/watch?v=9eF_-2vc_9s). 🍿
+Check out the demo [here](https://youtu.be/FdmE1Rnjy0o). 🍿
+
+Hosting is down at the moment cause I lost access to my EC2 instance :(
 
 ## 🏗️ System Architecture
 
@@ -34,12 +38,12 @@ Here's a high-level architecture of our cute little system. 🥰
 
 ## 📝 Submission Handling
 
-- Every new submission triggers a shiny new Docker container (Alpine Linux). 🐳
+- Every new submission triggers a new Docker container (Alpine Linux). 🐳
 - The container:
   - Compiles and runs the program.
   - Pulls the test data from the database if it’s not cached.
   - Compares the program output to the expected output.
-  - Sends a verdict (yay or nay!).
+  - Sends a verdict (AC/WA/CR/TLE/RTE).
 - Programs have a 2-second time limit; if they don't finish in time, they get a TLE (Time Limit Exceeded) verdict. ⏰
 
 ## 🔧 Implementation Details

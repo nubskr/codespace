@@ -23,10 +23,20 @@ export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
   const sharedlink = `http://localhost:3000/room/${roomid}`
 
   function renderTextWithKaTeX(text) {
-    const kaTeXPattern = /\$\$([^$]+)\$\$/g; // $$*insert math here*$$
-    const imagePattern = /\${img:([^}]+)}/g; // ${img:*image_link*}
+    // Normalize multiple dollar signs to exactly two dollar signs
+    function normalizeDollarSigns(input) {
+        // This regex matches sequences of three or more dollar signs and ensures we only replace them with $$.
+        return input.replace(/\${3,}/g, '$$$$');
+    }
 
-    const renderedText = text
+    // Preprocess text to normalize dollar signs
+    const normalizedText = normalizeDollarSigns(text);
+
+    // Patterns for KaTeX and image rendering
+    const kaTeXPattern = /\$\$([^$]+)\$\$/g;
+    const imagePattern = /\${img:([^}]+)}/g; // Updated image pattern
+
+    const renderedText = normalizedText
         .replace(kaTeXPattern, (match, content) => {
             try {
                 const rendered = katex.renderToString(content, {
@@ -47,8 +57,9 @@ export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
         .replace(/\n/g, "<br>")
         .replace(/\t/g, "&nbsp;&nbsp;")
         .replace(/\$\$/g, "")
-        .replace(/\$/g, "&#36");
-  }
+        .replace(/\$/g, "&#36;");
+}
+
   
   function SocketEmit(channel,msg){
     if(socketRef.current){

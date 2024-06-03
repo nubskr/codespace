@@ -2,7 +2,11 @@
 using namespace std;
 
 int main(){
- int t;s
+ int t;
  cin >> t;
- while(t--){cwgbb;
-   int ansrb< sgvt
+ while(t--){
+   int a,b;
+   cin >> a >> b;
+   cout << a + b - 1 << endl;
+ }
+}

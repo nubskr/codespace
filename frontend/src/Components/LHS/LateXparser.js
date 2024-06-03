@@ -19,10 +19,20 @@ function App({text,setText,input,setInput,handleClose}) {
 
 
   function renderTextWithKaTeX(text) {
+    // Normalize multiple dollar signs to exactly two dollar signs
+    function normalizeDollarSigns(input) {
+        // This regex matches sequences of three or more dollar signs and ensures we only replace them with $$.
+        return input.replace(/\${3,}/g, '$$$$');
+    }
+
+    // Preprocess text to normalize dollar signs
+    const normalizedText = normalizeDollarSigns(text);
+
+    // Patterns for KaTeX and image rendering
     const kaTeXPattern = /\$\$([^$]+)\$\$/g;
     const imagePattern = /\${img:([^}]+)}/g; // Updated image pattern
 
-    const renderedText = text
+    const renderedText = normalizedText
         .replace(kaTeXPattern, (match, content) => {
             try {
                 const rendered = katex.renderToString(content, {
@@ -43,8 +53,8 @@ function App({text,setText,input,setInput,handleClose}) {
         .replace(/\n/g, "<br>")
         .replace(/\t/g, "&nbsp;&nbsp;")
         .replace(/\$\$/g, "")
-        .replace(/\$/g, "&#36");
-  }
+        .replace(/\$/g, "&#36;");
+}
 
 
   function handleChange(e) {
