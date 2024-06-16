@@ -38,13 +38,19 @@ Here's a high-level architecture of our cute little system. 🥰
 
 ## 📝 Submission Handling
 
-- Every new submission triggers a new Docker container (Alpine Linux). 🐳
+- Backend pulls the test data from database if its not cached
+- Every new submission triggers a new Docker container (Alpine Linux).
 - The container:
-  - Compiles and runs the program.
-  - Pulls the test data from the database if it’s not cached.
-  - Compares the program output to the expected output.
-  - Sends a verdict (AC/WA/CR/TLE/RTE).
-- Programs have a 2-second time limit; if they don't finish in time, they get a TLE (Time Limit Exceeded) verdict. ⏰
+  - Creates a non root user and restricts it to a sandbox
+  - Sends the compiled binary and input to sandbox
+  - Sandbox returns the code output
+  - Checker then compares the program output to the expected output.
+  - Sends a verdict (AC/WA/CE/TLE/RTE).
+- Programs have a 2-second time limit and 256mb memory limit; if they don't finish in time, they get a TLE (Time Limit Exceeded) verdict. ⏰
+
+![Container](./misc/container.jpg)
+
+This is what's inside the container.
 
 ## 🔧 Implementation Details
 
