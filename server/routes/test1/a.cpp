@@ -7,6 +7,9 @@ int main(){
  while(t--){
    int a,b;
    cin >> a >> b;
-   cout << a + b - 1 << endl;
+   // while(1){
+     
+   // }
+   cout << a + b << endl;
  }
 }

@@ -4,8 +4,11 @@ const path = require('path');
 const fs = require('fs').promises;
 const router = express.Router();
 const docker = new Docker();
+const os = require('os');
 
 router.post('/', async (req, res) => {
+  console.log(uid);
+  console.log(gid);
   const cppfilepath = path.join(__dirname, 'test1', 'a.cpp');
   const inputfilepath = path.join(__dirname, 'test1', 'input.txt');
   const outputfilepath = path.join(__dirname, 'test1', 'output.txt');
@@ -16,11 +19,17 @@ router.post('/', async (req, res) => {
   }
 
   const containerOptions = {
-    Image: 'nubskr/compiler:UwU',
+    Image: 'nubskr/compiler:1',
     Cmd: ['./doshit.sh'],
-    Binds: [
-      '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
-    ],
+    HostConfig: {
+      Memory: 256 * 1024 * 1024, // 512MB
+      PidsLimit: 100, // Limit number of processes
+      Binds: [
+        '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
+      ],            
+      NetworkMode: 'none',
+      // TODO: add more limits
+    }
   };
 
   async function changeFile(filePath, data) {

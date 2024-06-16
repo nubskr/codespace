@@ -40,11 +40,17 @@ router.post('/', async (req, res) => {
   }
 
   const containerOptions = {
-    Image: 'nubskr/compiler:advanced',
+    Image: 'nubskr/compiler:1',
     Cmd: ['./doshit.sh'],
-    Binds: [
-      '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
-    ],
+    HostConfig: {
+      Memory: 256 * 1024 * 1024, // 512MB
+      PidsLimit: 100, // Limit number of processes
+      Binds: [
+        '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
+      ],            
+      NetworkMode: 'none',
+      // TODO: add more limits
+    }
   };
 
   async function changeFile(filePath, data) {
