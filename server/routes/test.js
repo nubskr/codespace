@@ -7,8 +7,8 @@ const docker = new Docker();
 const os = require('os');
 
 router.post('/', async (req, res) => {
-  console.log(uid);
-  console.log(gid);
+  // console.log(uid);
+  // console.log(gid);
   const cppfilepath = path.join(__dirname, 'test1', 'a.cpp');
   const inputfilepath = path.join(__dirname, 'test1', 'input.txt');
   const outputfilepath = path.join(__dirname, 'test1', 'output.txt');
