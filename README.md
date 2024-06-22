@@ -39,14 +39,13 @@ Here's a high-level architecture of our cute (not so)little monolithic system. �
 ## 📝 Submission Handling
 
 - Backend pulls the test data from database if its not cached
+
 - Every new submission triggers a new Docker container (Alpine Linux).
+
 - The container:
-  - Creates a non root user and restricts it to a sandbox
-  - Sends the compiled binary and input to sandbox
-  - Sandbox returns the code output
-  - Checker then compares the program output to the expected output.
-  - Sends a verdict (AC/WA/CE/TLE/RTE).
-- Programs have a 2-second time limit and 256mb memory limit; if they don't finish in time, they get a TLE (Time Limit Exceeded) verdict. ⏰
+   - Compiles and runs the code in a sandbox in a secure way
+   - Sends a verdict (AC/WA/CE/TLE/RTE).
+   - Programs have a 2-second time limit and 256mb memory limit; if they don't finish in time, they get a TLE (Time Limit Exceeded) verdict. ⏰
    - Alongside the time and memory limit inside the container, the container has no access to the internet and has a limit of atmost 100 processes (to protect against fork bombs)
 
 ## Container architecture
@@ -58,10 +57,15 @@ This is what's inside the container
 High level overview of what happens in each container:
 
 - Compile the code and put it in a sandboxed environment with the input data.
-- Change the password for the root user to something (truly)random so that untrusted code can't access the root userspace
+
+- Change the password for the root user to something (truly)random so that untrusted code can't access the root userspace.
+
 - Lock down the enviroment by setting permissions such that the code can't access anything outside of it,the code only has access to the input file.
+
 - We run the code with a time limit of 2 seconds.
+
 - After and if the code execution is complete, the generated output is then sent out to the root user for verification, if something goes wrong with the execution, then the sandbox gets terminated instantly and root user returns the verdict.
+
 - If the code is executed successfully, the root user sends out the verdict by comparing the program output and expected output
 
 Check [this](./Docker/doshit.sh) for implementation
@@ -76,7 +80,7 @@ Check [this](./Docker/doshit.sh) for implementation
 
 - **⛏ Web scraping**: Used BeautifulSoup with a custom scraper to scrape problems from codeforces.
 
-- **🏖️ Sandboxing**: Implemented sandboxing inside the docker container by setting up non previliged users to prevent untrusted codes from accessing the root userspace.
+- **🏖️ Sandboxing**: Implemented sandboxing inside the docker container by setting up non privileged users to prevent untrusted codes from accessing the root userspace.
 
 - **📦 Problem Packages**: Stored in MongoDB for easy management.
   - Includes:
