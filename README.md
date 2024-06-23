@@ -54,7 +54,7 @@ Here's a high-level architecture of our cute (not so)little monolithic system. ð
 
 This is what's inside the container 
 
-High level overview of what happens in each container:
+### High level overview of what happens in each container:
 
 - Compile the code and put it in a sandboxed environment with the input data.
 
@@ -69,6 +69,12 @@ High level overview of what happens in each container:
 - If the code is executed successfully, the root user sends out the verdict by comparing the program output and expected output
 
 Check [this](./Docker/doshit.sh) for implementation
+
+### Note:
+ 
+You are welcome and encouraged to try to hack this system as it would help me improve upon it in the next iteration and it wouldn't have reached this stage if people hadn't exploited it in the past.
+
+If you find any bugs/vulnerabilites please open an issue and let me know as it's quite unpredictable what people would do to a system when they get their hands on it,especially when they can run codes on it.
 
 ## ðŸ”§ Implementation Details
 
