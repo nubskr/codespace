@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import io from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-const socket = io("http://localhost:6909/",{transports: ['websocket']});
+const socket = io(process.env.REACT_APP_BACKEND_URL,{transports: ['websocket']});
 
 export default function JoinRoom() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [roomid, setRoomid] = useState('');
-  
+
+    
+
     const handleUsernameChange = (e) => {
       setUsername(e.target.value);
     };

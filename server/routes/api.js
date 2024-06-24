@@ -140,7 +140,7 @@ router.get('/parse_problem/:param',async (req,res) => {
   else{
     try{
       console.log("running");
-      exec(`python routes/scraper.py ${req_problem}`,(error,stdout,stderr) => {
+      exec(`python3 routes/scraper.py ${req_problem}`,(error,stdout,stderr) => {
         if(error){
           console.error(`exec error: ${error}`);
           res.status(500).send(`Error: ${error.message}`);

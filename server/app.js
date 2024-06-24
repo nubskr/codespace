@@ -12,24 +12,23 @@ const app = express();
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-	// standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	// legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+	limit: 50, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
 })
 
-// Apply the rate limiting middleware to all requests.
-// app.use(limiter)
+app.use('/api',limiter);
+
+app.use(rateLimit({
+    windowMs: 15 * 60 * 100,
+    limit: 1000, // a bit generous here
+}))
 
 app.use(cors());
 const server = createServer(app);
 const io = new Server(server); // this shit creates a separate websocket server whenever a connection opens
 
-// app.use(bodyParser.json()); // for parsing application/json
 app.use(express.json({limit: '50mb'}));
 app.use(express.json({limit: '50mb' , extended: true}));
-// app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.use('/api',limiter);
 app.use('/api',api1)
 app.use('/test',test)
 app.use('/submit',submit)
@@ -165,10 +164,6 @@ app.use((req, res, next) => {
       error: "Rate limit exceeded, please try again later",
     });
   });
-
-app.get('/',(req,res) => {
-    res.send("hewwo fren");
-})
 
 server.listen(6909, () => {
     console.log(`server listening`);

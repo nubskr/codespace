@@ -6,6 +6,7 @@ const router = express.Router();
 const docker = new Docker();
 const fetch = require('node-fetch');
 
+// this always runs in localhost, so we should be fine with hardcoding it
 const targetRouteUrl = 'http://localhost:6909/api/get-test-package';
 
 router.post('/', async (req, res) => {
@@ -14,6 +15,7 @@ router.post('/', async (req, res) => {
   const expectedoutputpath = path.join(__dirname, 'test1', 'expected_output.txt');
   const verdictfilepath = path.join(__dirname, 'test1', 'verdict.txt');
   const { code, problem_id } = req.body;
+  const test_path = path.join(__dirname,'test1');
 
   if (!code || !problem_id) {
     return res.status(400).send('Code and problem ID are required.');
@@ -46,7 +48,7 @@ router.post('/', async (req, res) => {
       Memory: 256 * 1024 * 1024, // 512MB
       PidsLimit: 100, // Limit number of processes
       Binds: [
-        '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
+        `${test_path}:/contest/`,
       ],            
       NetworkMode: 'none',
       // TODO: add more limits

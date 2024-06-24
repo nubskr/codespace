@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import io from 'socket.io-client';
 import { v4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-const socket = io("http://localhost:6909/",{transports: ['websocket']});
+const socket = io(process.env.REACT_APP_BACKEND_URL,{transports: ['websocket']});
 
 const randomUuid = v4();
 
