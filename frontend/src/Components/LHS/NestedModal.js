@@ -23,7 +23,7 @@ const style = {
   overflow: 'auto',
 };
 
-const api = 'http://localhost:6909/api/new'
+const api = `${process.env.REACT_APP_BACKEND_URL}/api/new`
 
 function ChildModal({socketRef, text,setText,input,setInput}) {
   const [open, setOpen] = React.useState(false);
