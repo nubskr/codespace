@@ -8,7 +8,7 @@ import CopyLinkButton from './ShareRoom';
 import { useParams } from 'react-router-dom';
 import Samples from './Samples';
 
-const api = `${process.env.REACT_APP_BACKEND_URL}/api/problem-list`;
+const api = 'http://localhost:6909/api/problem-list';
 
 export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
   // when we change the problem, just broadcast the problem id, and everything will change
@@ -20,6 +20,7 @@ export default function Main_LHS({socketRef,currentProbId,setCurrentProb}) {
   const [data,setData] = useState("");
 
   const {roomid} = useParams();
+  const sharedlink = `http://localhost:3000/room/${roomid}`
 
   function renderTextWithKaTeX(text) {
     // Normalize multiple dollar signs to exactly two dollar signs

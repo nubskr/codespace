@@ -7,10 +7,11 @@ const docker = new Docker();
 const os = require('os');
 
 router.post('/', async (req, res) => {
+  // console.log(uid);
+  // console.log(gid);
   const cppfilepath = path.join(__dirname, 'test1', 'a.cpp');
   const inputfilepath = path.join(__dirname, 'test1', 'input.txt');
   const outputfilepath = path.join(__dirname, 'test1', 'output.txt');
-  const test_path = path.join(__dirname,'test1');
   const { code, input } = req.body;
 
   if (!code) {
@@ -24,7 +25,7 @@ router.post('/', async (req, res) => {
       Memory: 256 * 1024 * 1024, // 512MB
       PidsLimit: 100, // Limit number of processes
       Binds: [
-        `${test_path}/:/contest/`,
+        '/home/nubskr/projects/codespace/server/routes/test1/:/contest/',
       ],            
       NetworkMode: 'none',
       // TODO: add more limits

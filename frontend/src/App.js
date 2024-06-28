@@ -6,10 +6,9 @@ import CreateNewRoom from './Components/CreateNewRoom';
 import Room from './Components/Room';
 import GetUsername from './Components/GetUsername';
 
-// const socket = io("localhost:6909/",{transports: ['websocket']});
+// const socket = io("http://localhost:6909/",{transports: ['websocket']});
 
 function App(){
-  console.log(process.env)
   return (
     <BrowserRouter>
       <Routes>

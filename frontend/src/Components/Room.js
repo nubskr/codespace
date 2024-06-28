@@ -70,13 +70,13 @@ export default function Room() {
     
 
     useEffect(()=>{
-      // socketRef.current = io("localhost:6909/", { transports: ['websocket'] });
+      // socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
       // socketRef.current.emit('join room',{roomid: roomid , userid: userid});
     },[])
 
     function turnonmic(){
         let audioStream = null;
-        // socketRef.current = io("localhost:6909/", { transports: ['websocket'] });
+        // socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
         navigator.mediaDevices.getUserMedia({video: false, audio: true}).then(stream => {
             audioStream = stream;
             if(!isMicOn){
@@ -91,7 +91,7 @@ export default function Room() {
     }
             }
           // socketRef.current.emit('join room',{roomid: roomid , userid: userid});
-          socketRef.current = io(process.env.REACT_APP_BACKEND_URL, { transports: ['websocket'] });
+          socketRef.current = io("http://localhost:6909/", { transports: ['websocket'] });
       socketRef.current.emit('join room',{roomid: roomid , userid: userid});
           socketRef.current.on('receive message',(payload) => {
             console.log(`I am ${userid}`);
