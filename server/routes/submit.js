@@ -6,7 +6,7 @@ const router = express.Router();
 const docker = new Docker();
 const fetch = require('node-fetch');
 
-// this always runs in localhost, so we should be fine with hardcoding it
+// this always runs inhouse, so we should be fine with hardcoding it
 const targetRouteUrl = 'http://localhost:6909/api/get-test-package';
 
 router.post('/', async (req, res) => {

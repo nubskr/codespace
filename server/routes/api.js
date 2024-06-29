@@ -3,20 +3,17 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const router = express.Router();
 const url = process.env.MONGODB_URI;
-const { exec } = require('child_process')
-const redis = require('redis');
-const { stderr } = require('process');
-const redisClient = redis.createClient();
-redisClient.connect();
-
+const {QueueEvents} = require('bullmq');
+const { redisClient } = require('../model/redisModel');
+const {scrapingQueue,scrapingWorker} = require('../jobs/webScrapingWorker')
 const expire_time = 3600;
-
-redisClient.on('connect', async function() {
-  console.log('Connected to Redis');
-});
-
-redisClient.on('error', function (err) {
-  console.error('Redis Error:', err);
+redisClient.connect();
+redisClient.set('key', 'value', (err, reply) => {
+  if (err) {
+      console.error('Error setting value in Redis:', err);
+  } else {
+      console.log('Value set in Redis:', reply);
+  }
 });
 
 const ProblemSchema = new mongoose.Schema({
@@ -80,7 +77,37 @@ function newProblem(data){
   });
 }
 
+function waitforJobCompletion(queue,job){
+  // checks the status
+  const queueEvents = new QueueEvents(queue.name);
+  return new Promise(function(resolve,reject){
+    function completedHandler({jobId,returnvalue}) {
+      console.log("something passed");
+      if(jobId === job.id){
+        // console.log("we done ????");
+        // console.log(returnvalue);
+        // our work is done here, remove the event listeners
+        queueEvents.off('completed', completedHandler);
+        queueEvents.off('failed', failedHandler);
+        resolve(returnvalue);
+      }
+    }
+
+    function failedHandler({jobId,failedReason}) {
+      // console.log("something failed");
+      if(jobId === job.id){
+        queueEvents.off('completed', completedHandler);
+        queueEvents.off('failed', failedHandler);
+        reject(new Error(failedReason));
+      }
+    }
+    queueEvents.on("completed",completedHandler);
+    queueEvents.on("failed",failedHandler);
+  })
+}
+
 async function getProblemList(){
+  // console.log(redisClient);
   try{
     const data = await problem_model.find({});
     return data;
@@ -112,6 +139,7 @@ router.get('/problem-list',async (req,res) => {
     if(data===null){
       console.log("We don't have that cached sire");
       data = await getProblemList();
+      console.log(data);
       // cache the problems now
       redisClient.set("problem-list",JSON.stringify(data));
       res.send(data);
@@ -130,48 +158,26 @@ router.get('/problem-list',async (req,res) => {
 
 router.get('/parse_problem/:param',async (req,res) => {
   // console.log("who called me");
+  // console.log(redisClient);
   
   const req_problem = decodeURIComponent(req.params.param);
   var data = await redisClient.get(req_problem);
-  console.log(req_problem);
+  console.log(data);
   if(data!==null){
     res.json(JSON.parse(data));
   }
   else{
-    try{
-      console.log("running");
-      exec(`python3 routes/scraper.py ${req_problem}`,(error,stdout,stderr) => {
-        if(error){
-          console.error(`exec error: ${error}`);
-          res.status(500).send(`Error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          res.status(500).send(`Error: ${stderr}`);
-          return;
-      }
-      console.log('here'); 
-      console.log(stdout);
-      try{
-        redisClient.setEx(req_problem,expire_time,JSON.stringify(JSON.parse(stdout)));
-        
-        // res.status(200).json(JSON.stringify(stdout));
-        console.log(data);
-        res.send(JSON.parse(stdout));
-      }
-      catch(err){
-        res.json({"error": "Invalid link"});
-
-        console.error(err);
-      }
-        
-      })
-    }
-    catch(err){
-      console.error(err);
-    }
-}
+    // let the worker do it!!
+    // console.log("=======");
+    // console.log(req_problem);
+    const job = await scrapingQueue.add('scrapingProcess',req_problem);
+    console.log("added to queue");
+    // console.log(scrapingQueue);
+    const result = await waitforJobCompletion(scrapingQueue,job);
+    // console.log("final");
+    // console.log(result);
+    res.json(result);
+  }
 
 
 })
@@ -203,5 +209,7 @@ router.post('/get-test-package', async (req,res) => {
   }
 })
 
+
 module.exports = router;
+
 
