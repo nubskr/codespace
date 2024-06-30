@@ -6,6 +6,7 @@ const url = process.env.MONGODB_URI;
 const {QueueEvents} = require('bullmq');
 const { redisClient } = require('../model/redisModel');
 const {scrapingQueue} = require('../jobs/webScrapingWorker')
+const {uploadFile,getTestData} = require('../controllers/s3Controller');
 const expire_time = 3600;
 redisClient.connect();
 redisClient.set('key', 'value', (err, reply) => {
@@ -31,7 +32,7 @@ const testsSchema = new mongoose.Schema({
 });
 
 const problem_model = mongoose.model('Problem Packages',ProblemSchema);
-const tests_model = mongoose.model('Test Packages',testsSchema);
+// const tests_model = mongoose.model('Test Packages',testsSchema);
 mongoose.connect(url);
 
 function newProblem(data){
@@ -53,11 +54,11 @@ function newProblem(data){
     soutput,
   });
 
-  const tests_package = new tests_model({
-    id,
-    main_tests,
-    expected_output,
-  });
+  // const tests_package = new tests_model({
+  //   id,
+  //   main_tests,
+  //   expected_output,
+  // });
 
   problem_package.save()
   .then(() => {
@@ -67,14 +68,13 @@ function newProblem(data){
     console.error('Error saving problem_package:', error.message);
   });
 
-  tests_package.save()
+  
+  // push test data to s3 bucket
 
-  .then(() => {
-    console.log('tests_package saved successfully');
-  })
-  .catch(error => {
-    console.error('Error saving tests_package:', error.message);
-  });
+  // hardcoding file names untill I implement multitests!!
+  uploadFile(`${data.id}/input`,'input.txt',data.main_tests);
+  uploadFile(`${data.id}/output`,'output.txt',data.expected_output);
+
 }
 
 function waitforJobCompletion(queue,job){
@@ -98,7 +98,7 @@ function waitforJobCompletion(queue,job){
       if(jobId === job.id){
         queueEvents.off('completed', completedHandler);
         queueEvents.off('failed', failedHandler);
-        reject(new Error(failedReason));
+        reject(new Error("Job error"));
       }
     }
     queueEvents.on("completed",completedHandler);
@@ -107,7 +107,6 @@ function waitforJobCompletion(queue,job){
 }
 
 async function getProblemList(){
-  // console.log(redisClient);
   try{
     const data = await problem_model.find({});
     return data;
@@ -157,7 +156,7 @@ router.get('/problem-list',async (req,res) => {
 })
 
 router.get('/parse_problem/:param',async (req,res) => {
-  // console.log("who called me");
+  console.log("who called me");
   // console.log(redisClient);
   
   const req_problem = decodeURIComponent(req.params.param);
@@ -168,15 +167,18 @@ router.get('/parse_problem/:param',async (req,res) => {
   }
   else{
     // let the worker do it!!
-    // console.log("=======");
-    // console.log(req_problem);
     const job = await scrapingQueue.add('scrapingProcess',req_problem);
     console.log("added to queue");
-    // console.log(scrapingQueue);
-    const result = await waitforJobCompletion(scrapingQueue,job);
-    // console.log("final");
-    // console.log(result);
-    res.json(result);
+    try{
+      const result = await waitforJobCompletion(scrapingQueue,job);
+      res.json(result);
+    }
+    catch(err){
+      console.error(err);
+      res.json({error: "Invalid link!"});
+      // send everything empty ?
+    }
+    
   }
 
 
@@ -184,15 +186,16 @@ router.get('/parse_problem/:param',async (req,res) => {
 
 router.post('/get-test-package', async (req,res) => {
   const {id} = req.body;
-  // // console.log("requested test id is " + id);
-
-  // const data = await tests_model.find({id: id});
-  // res.json(data);
+  // needs to return a nice json!
+  // so we get data from bucket and make it a json!
   try{
     var data = await redisClient.get(id);
     if(data===null){
       console.log("We don't have that cached sire");
-      data = await tests_model.find({id: id});
+      // I hope memory does not blow up with caching big tests bruh!
+
+      data = await getTestData(id);
+      
       // cache the problems now
       redisClient.setEx(id,expire_time,JSON.stringify(data));
       res.json(data);
@@ -205,7 +208,6 @@ router.post('/get-test-package', async (req,res) => {
   }
   catch(error){
     console.error(error);
-    res.send("dead");
   }
 })
 

@@ -1,5 +1,4 @@
 const {Job, Queue, Worker, QueueEvents} = require('bullmq')
-const {v4: uuidv4} = require('uuid');
 const fs = require('fs');
 const path = require('path');
 const Docker = require('dockerode');
@@ -80,14 +79,14 @@ async function submissionWorker(job) {
                 const { code, problemId } = job.data;
                 // Get the test package
                 const testPackage = await getTestPackageData(problemId);
-    
+                console.log("test package is",testPackage);
                 // Define file paths
                 const cppfilepath = path.join(folderPath, 'a.cpp');
                 const inputfilepath = path.join(folderPath, 'input.txt');
                 const expectedoutputpath = path.join(folderPath, 'expected_output.txt');
                 const verdictfilepath = path.join(folderPath, 'verdict.txt');
                 const test_path = path.join(folderPath);
-                const { expected_output, main_tests } = testPackage[0];
+                const { expected_output, main_tests } = testPackage;
     
                 // Change files
                 await changeFile(inputfilepath, main_tests);
@@ -133,7 +132,6 @@ function waitforJobCompletion(queue,job){
         console.log("something passed");
         if(jobId === job.id){
           // console.log("we done ????");
-          // console.log(returnvalue);
           // our work is done here, remove the event listeners
           queueEvents.off('completed', completedHandler);
           queueEvents.off('failed', failedHandler);
@@ -146,7 +144,7 @@ function waitforJobCompletion(queue,job){
         if(jobId === job.id){
           queueEvents.off('completed', completedHandler);
           queueEvents.off('failed', failedHandler);
-          reject(new Error(failedReason));
+          reject(failedReason);
         }
       }
       queueEvents.on("completed",completedHandler);

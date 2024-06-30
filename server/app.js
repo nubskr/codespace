@@ -11,11 +11,11 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 50, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	windowMs: 1 * 60 * 1000, // 1 minute
+	limit: 20, // Limit each IP to 20 requests per `window`.
 })
 
-app.use('/api',limiter);
+app.use('/api/parse_problem',limiter);
 
 app.use(rateLimit({
     windowMs: 15 * 60 * 100,

@@ -83,5 +83,9 @@ for statement in problem_statements:
         "note": notes
     }
 
-    json_data = json.dumps(data, indent=0)
-    print(json_data)
+    try:
+        json_data = json.dumps(data, indent=0)
+        print(json_data)
+    except Exception as e:
+        print(f"Error: Failed to serialize data to JSON: {e}")
+        # exit(1)
