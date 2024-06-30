@@ -5,104 +5,107 @@ const fs = require('fs').promises;
 const router = express.Router();
 const docker = new Docker();
 const fetch = require('node-fetch');
-
-// this always runs inhouse, so we should be fine with hardcoding it
-const targetRouteUrl = 'http://localhost:6909/api/get-test-package';
+const {submissionQueue,waitforJobCompletion} = require('../jobs/submissionWorker')
 
 router.post('/', async (req, res) => {
-  const cppfilepath = path.join(__dirname, 'test1', 'a.cpp');
-  const inputfilepath = path.join(__dirname, 'test1', 'input.txt');
-  const expectedoutputpath = path.join(__dirname, 'test1', 'expected_output.txt');
-  const verdictfilepath = path.join(__dirname, 'test1', 'verdict.txt');
+  // const cppfilepath = path.join(__dirname, 'test1', 'a.cpp');
+  // const inputfilepath = path.join(__dirname, 'test1', 'input.txt');
+  // const expectedoutputpath = path.join(__dirname, 'test1', 'expected_output.txt');
+  // const verdictfilepath = path.join(__dirname, 'test1', 'verdict.txt');
   const { code, problem_id } = req.body;
-  const test_path = path.join(__dirname,'test1');
+  // const test_path = path.join(__dirname,'test1');
 
   if (!code || !problem_id) {
     return res.status(400).send('Code and problem ID are required.');
   }
 
-  async function getTestPackageData() {
-    try {
-      const response = await fetch(targetRouteUrl, {
-        method: 'POST',
-        body: JSON.stringify({ id: problem_id }),
-        headers: { 'Content-Type': 'application/json' }
-      });
+  const job = await submissionQueue.add('submissionProcess',{code: code, problemId: problem_id});
+  const verdictData = await waitforJobCompletion(submissionQueue,job);
 
-      if (!response.ok) {
-        throw new Error(`Error fetching data: ${response.statusText}`);
-      }
+  res.send(verdictData);
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
-  }
+  // async function getTestPackageData() {
+  //   try {
+  //     const response = await fetch(targetRouteUrl, {
+  //       method: 'POST',
+  //       body: JSON.stringify({ id: problem_id }),
+  //       headers: { 'Content-Type': 'application/json' }
+  //     });
 
-  const containerOptions = {
-    Image: 'nubskr/compiler:1',
-    Cmd: ['./doshit.sh'],
-    HostConfig: {
-      Memory: 256 * 1024 * 1024, // 512MB
-      PidsLimit: 100, // Limit number of processes
-      Binds: [
-        `${test_path}:/contest/`,
-      ],            
-      NetworkMode: 'none',
-      // TODO: add more limits
-    }
-  };
+  //     if (!response.ok) {
+  //       throw new Error(`Error fetching data: ${response.statusText}`);
+  //     }
 
-  async function changeFile(filePath, data) {
-    try {
-      await fs.writeFile(filePath, data, 'utf8');
-      console.log(`File content at ${filePath} has been updated.`);
-    } catch (err) {
-      console.error('Error writing the file:', err);
-      throw err;
-    }
-  }
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //     throw error;
+  //   }
+  // }
 
-  async function runContainer() {
-    try {
-      const container = await docker.createContainer(containerOptions);
-      await container.start();
-      console.log('Container started successfully.');
+  // const containerOptions = {
+  //   Image: 'nubskr/compiler:1',
+  //   Cmd: ['./doshit.sh'],
+  //   HostConfig: {
+  //     Memory: 256 * 1024 * 1024, // 512MB
+  //     PidsLimit: 100, // Limit number of processes
+  //     Binds: [
+  //       `${test_path}:/contest/`,
+  //     ],            
+  //     NetworkMode: 'none',
+  //     // TODO: add more limits
+  //   }
+  // };
 
-      // Additional interactions with the container can be added here
+  // async function changeFile(filePath, data) {
+  //   try {
+  //     await fs.writeFile(filePath, data, 'utf8');
+  //     console.log(`File content at ${filePath} has been updated.`);
+  //   } catch (err) {
+  //     console.error('Error writing the file:', err);
+  //     throw err;
+  //   }
+  // }
 
-      await container.stop();
-      console.log('Container stopped.');
+  // async function runContainer() {
+  //   try {
+  //     const container = await docker.createContainer(containerOptions);
+  //     await container.start();
+  //     console.log('Container started successfully.');
 
-      const verdictData = await fs.readFile(verdictfilepath, 'utf8');
-      res.send(verdictData);
-    } catch (err) {
-      console.error('Error during Docker container operation:', err);
-      res.status(500).send('Internal Server Error');
-    }
-  }
+  //     // Additional interactions with the container can be added here
 
-  try {
-    await changeFile(cppfilepath, code);
+  //     await container.stop();
+  //     console.log('Container stopped.');
 
-    const testPackage = await getTestPackageData();
+  //     const verdictData = await fs.readFile(verdictfilepath, 'utf8');
+  //     res.send(verdictData);
+  //   } catch (err) {
+  //     console.error('Error during Docker container operation:', err);
+  //     res.status(500).send('Internal Server Error');
+  //   }
+  // }
+
+  // try {
+  //   await changeFile(cppfilepath, code);
+
+  //   const testPackage = await getTestPackageData();
     
-    try{
-      const { expected_output, main_tests } = testPackage[0];
+  //   try{
+  //     const { expected_output, main_tests } = testPackage[0];
 
-      await changeFile(inputfilepath, main_tests);
-      await changeFile(expectedoutputpath, expected_output);
+  //     await changeFile(inputfilepath, main_tests);
+  //     await changeFile(expectedoutputpath, expected_output);
   
-      await runContainer(); 
-    }
-    catch(err){
-      res.send(500).send("error processing request");
-    }
-  } catch (err) {
-    res.status(500).send('An error occurred while processing your request.');
-  }
+  //     await runContainer(); 
+  //   }
+  //   catch(err){
+  //     res.send(500).send("error processing request");
+  //   }
+  // } catch (err) {
+  //   res.status(500).send('An error occurred while processing your request.');
+  // }
 });
 
 module.exports = router;

@@ -5,7 +5,7 @@ const router = express.Router();
 const url = process.env.MONGODB_URI;
 const {QueueEvents} = require('bullmq');
 const { redisClient } = require('../model/redisModel');
-const {scrapingQueue,scrapingWorker} = require('../jobs/webScrapingWorker')
+const {scrapingQueue} = require('../jobs/webScrapingWorker')
 const expire_time = 3600;
 redisClient.connect();
 redisClient.set('key', 'value', (err, reply) => {

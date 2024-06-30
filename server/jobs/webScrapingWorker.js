@@ -40,7 +40,11 @@ async function scrapingWorker(job) {
         });
     });
 }
-const worker = new Worker('scrapingProcess',scrapingWorker,{connection: connectionOptions});
+
+const worker = new Worker('scrapingProcess',scrapingWorker, {
+    connection: connectionOptions,
+    concurrency: 5
+});
     
 
 module.exports = {scrapingQueue, scrapingWorker: worker};
