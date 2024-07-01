@@ -4,6 +4,8 @@ const path = require('path');
 const Docker = require('dockerode');
 const docker = new Docker();
 
+require('dotenv').config();
+
 const connectionOptions = {
     host: '0.0.0.0',
     port: 6379
@@ -154,7 +156,7 @@ function waitforJobCompletion(queue,job){
 
 const worker = new Worker('submissionProcess',submissionWorker,{
   connection: connectionOptions,
-  concurrency: 5
+  concurrency: parseInt(process.env.CONCURRENT_SUBMISSION_WORKERS)
 });
 
 module.exports = {submissionQueue, submissionWorker: worker, waitforJobCompletion};

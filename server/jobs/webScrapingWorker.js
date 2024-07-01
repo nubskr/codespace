@@ -3,6 +3,8 @@ const {redisClient} = require('../model/redisModel')
 const {exec} = require('child_process');
 const { stderr } = require('process');
 
+require('dotenv').config();
+
 const connectionOptions = {
     host: '0.0.0.0',
     port: 6379
@@ -43,7 +45,7 @@ async function scrapingWorker(job) {
 
 const worker = new Worker('scrapingProcess',scrapingWorker, {
     connection: connectionOptions,
-    concurrency: 5
+    concurrency: parseInt(process.env.CONCURRENT_SCRAPING_WORKERS)
 });
     
 

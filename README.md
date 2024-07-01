@@ -115,17 +115,28 @@ To use this project, follow these steps:
    git clone https://github.com/nubskr/codespace.git
    cd codespace
    ```
+
 2. Install dependencies:
    ```sh
    npm install
    ```
-3. Pull Container images and config docker
+3. Pull Container images and config docker and setup environment variables
    ```sh
-   ./setup.sh
+   sudo ./setup.sh
+
+   cd ./server
+   vim .env
+
+   MONGODB_URI=''
+   AWS_ACCESS_KEY_ID=''
+   AWS_SECRET_ACCESS_KEY=''
+   AWS_REGION=''
+   S3_BUCKET_NAME=''
+   CONCURRENT_SCRAPING_WORKERS=''
+   CONCURRENT_SUBMISSION_WORKERS=''
    ```
 3. Start the servers:
    ```sh
-   cd ./server
    npm start
    cd ..
    cd ./frontend

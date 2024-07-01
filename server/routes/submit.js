@@ -13,6 +13,9 @@ router.post('/', async (req, res) => {
   const job = await submissionQueue.add('submissionProcess',{code: code, problemId: problem_id});
   const verdictData = await waitforJobCompletion(submissionQueue,job);
 
+
+  //TODO: delete the folder now ffs bruh
+
   res.send(verdictData);
 
 });
