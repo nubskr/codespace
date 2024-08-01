@@ -76,6 +76,10 @@ You are welcome and encouraged to try to hack this system as it would help me im
 
 If you find any bugs/vulnerabilites please open an issue and let me know as it's quite unpredictable what people would do to a system when they get their hands on it,especially when they can run codes on it.
 
+### Wait a second, why did you make this again ?
+
+idk, why do **you** do things ?, I like it, its just curiosity, I have no endgoal with this, I just like things to be as elegant and as fast as I can make them and this give me a way try novel things.
+
 ## 🔧 Implementation Details
 
 - **🎤 Group Voice Chat**: Implemented using WebRTC to reduce server load. Chat with your whole group while you code!
@@ -104,6 +108,16 @@ If you find any bugs/vulnerabilites please open an issue and let me know as it's
 ## 🌐 Supported Languages
 
 - Only supports C++ for now. 🖋️
+
+## Current objectives
+
+- Making submission system more scalable and efficient with better auto scaling(thinking about making this thing its own microservice, would take more time but would be very kawaii) 
+
+- Making the system multi-node from one node, I'll also introduce a new architecture which 
+ofc I won't be renting a cluster or whatever(I'm broke), instead let's try the hacky way, since ec2 instances are available in free tier, I'll just use those as nodes, and kubernetes would just scale shit up and down as needed, nice
+
+- Fix a security issue which got introduced in the last update(ignorant of me to think that compiling untrusted code is safe)
+
 
 ## 🚀 Usage
 
